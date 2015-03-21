@@ -27,6 +27,11 @@ namespace Expand
         {
 
         }
+
+        public void setDead()
+        {
+            this.alive = false;
+        }
     }
 
     public class SpaceObject: GameObject
