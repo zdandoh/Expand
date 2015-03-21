@@ -27,11 +27,11 @@ namespace Expand
         {
 
         }
+    }
 
-        public virtual String saveString()
-        {
-            // Returns a string of all the data that will be saved in the sector file
-            return "";
-        }
+    public class SpaceObject: GameObject
+    {
+        // Anything that should be saved in a sector file is a space object
+        bool space_object = true;
     }
 }

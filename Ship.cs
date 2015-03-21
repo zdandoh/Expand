@@ -75,6 +75,7 @@ namespace Expand
             this.pos[0] += x_velocity;
 
             radians = (float)(Math.Atan2(y_velocity,  x_velocity));
+            Console.WriteLine(Program.game.space.getSector()[0] + " " + Program.game.space.getSector()[1]);
         }
 
         public override void draw()
