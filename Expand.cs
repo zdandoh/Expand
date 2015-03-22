@@ -81,7 +81,7 @@ namespace Expand
         public void drawSprite(Texture2D texture, int x, int y)
         {
             // Check if sprite is in player view
-            if (Math.Pow((x - Program.game.ship.pos[0]), 2) + Math.Pow((y - Program.game.ship.pos[1]), 2) < 250000)
+            if ((x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000)
             {
                 Vector2 pos_vector = new Vector2(x - Program.game.ship.pos[0] + Program.game.ship.draw_location[0], y - Program.game.ship.pos[1] + Program.game.ship.draw_location[1]);
                 this.spriteBatch.Draw(texture, pos_vector);

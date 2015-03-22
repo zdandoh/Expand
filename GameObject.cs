@@ -39,5 +39,10 @@ namespace Expand
     {
         // Anything that should be saved in a sector file is a space object
         bool space_object = true;
+
+        public SpaceObject()
+        {
+
+        }
     }
 }

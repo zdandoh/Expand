@@ -11,7 +11,6 @@ namespace Expand
         List<GameObject> game_objects = new List<GameObject>();
         List<Texture2D> texture_queue = new List<Texture2D>();
 
-
         public void addObject(GameObject new_object)
         {
             game_objects.Add(new_object);

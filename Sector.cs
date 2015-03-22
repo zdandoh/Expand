@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,13 +10,14 @@ namespace Expand
     public class Sector
     {
         public List<Star> stars = new List<Star>();
-        public List<SpaceObject> space_objects = new List<SpaceObject>();
         public String sector_name;
+        public String sector_file_location;
         public bool is_loaded = false;
         public int[] coords = new int[2];
         public Sector(int x, int y)
         {
-            sector_name = "sector-" + x + "-" + y;
+            sector_name = "sector" + x + "." + y;
+            sector_file_location = getSectorFileName(x, y);
             coords[0] = x;
             coords[1] = y;
         }
@@ -29,7 +31,7 @@ namespace Expand
                 int x_coord = Program.game.rand_gen.Next(20, SECTOR_SIZE - 20);
                 int y_coord = Program.game.rand_gen.Next(20, SECTOR_SIZE - 20);
                 Star new_star = new Star(x_coord + 5000*coords[0], y_coord + 5000*coords[1]);
-                this.space_objects.Add(new_star);
+                this.stars.Add(new_star);
             }
             this.is_loaded = true;
             this.save();
@@ -39,12 +41,12 @@ namespace Expand
         public bool exists()
         {
             // Checks if the sector has already been generated and saved.
-            return File.Exists("space//" + sector_name + ".json");
+            return File.Exists(sector_file_location);
         }
 
         public static bool exists(int x, int y)
         {
-            return File.Exists("space//" + "sector-" + x + "-" + y + ".json");
+            return File.Exists(getSectorFileName(x, y));
         }
 
         public String formatName()
@@ -54,7 +56,7 @@ namespace Expand
 
         public void unload()
         {
-            foreach (SpaceObject space_object in space_objects)
+            foreach (SpaceObject space_object in stars)
             {
                 space_object.setDead();
             }
@@ -64,16 +66,31 @@ namespace Expand
         public void save()
         {
             String json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
-            System.IO.StreamWriter json_fi = new System.IO.StreamWriter("space//" + this.sector_name + ".json");
+            System.IO.StreamWriter json_fi = new System.IO.StreamWriter(sector_file_location);
             json_fi.Write(json);
             json_fi.Close();
+        }
+
+        public static String getSectorFileName(int x, int y)
+        {
+            String sector_name = "sector" + x + "." + y;
+            return "space//" + sector_name + ".json";
+        }
+
+        public void reload()
+        {
+            // Loads all space objects into the game again
+            foreach (SpaceObject space_object in this.stars)
+            {
+                Program.game.object_handler.addObject(space_object);
+            }
         }
 
         public static Sector load(int x, int y)
         {
             // Loads all the sector data from a file into this sector
-            String sector_name = "sector-" + x + "-" + y;
-            String sector_file = File.ReadAllText("space//" + sector_name + ".json");
+            String sector_file = File.ReadAllText(getSectorFileName(x, y));
+            //JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
             Sector loaded_sector = (Sector) Newtonsoft.Json.JsonConvert.DeserializeObject<Sector>(sector_file);
             return loaded_sector;
         }

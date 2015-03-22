@@ -14,6 +14,7 @@ namespace Expand
         public int[] pos = {400 - 15, 300 - 50};
         public int[] draw_location;
         private float radians = 0;
+        private bool preserve_rotation = false;
         private int y_velocity = 0;
         private int x_velocity = 0;
         private double y_velocity_change = 0;
@@ -32,26 +33,31 @@ namespace Expand
             {
                 y_velocity -= 1;
                 y_velocity_change = Program.game.game_time.ElapsedMilliseconds;
+                this.preserve_rotation = false;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S) && Program.game.game_time.ElapsedMilliseconds - y_velocity_change > VELOCITY_COOLDOWN)
             {
                 y_velocity += 1;
                 y_velocity_change = Program.game.game_time.ElapsedMilliseconds;
+                this.preserve_rotation = false;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A) && Program.game.game_time.ElapsedMilliseconds - x_velocity_change > VELOCITY_COOLDOWN)
             {
                 x_velocity -= 1;
                 x_velocity_change = Program.game.game_time.ElapsedMilliseconds;
+                this.preserve_rotation = false;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D) && Program.game.game_time.ElapsedMilliseconds - x_velocity_change > VELOCITY_COOLDOWN)
             {
                 x_velocity += 1;
                 x_velocity_change = Program.game.game_time.ElapsedMilliseconds;
+                this.preserve_rotation = false;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 y_velocity = 0;
                 x_velocity = 0;
+                this.preserve_rotation = true;
             }
 
             if (y_velocity > 5)
@@ -74,7 +80,10 @@ namespace Expand
             this.pos[1] += y_velocity;
             this.pos[0] += x_velocity;
 
-            radians = (float)(Math.Atan2(y_velocity,  x_velocity));
+            if (!preserve_rotation)
+            {
+                radians = (float)(Math.Atan2(y_velocity, x_velocity));
+            }
         }
 
         public override void draw()

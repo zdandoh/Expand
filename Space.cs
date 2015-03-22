@@ -54,7 +54,8 @@ namespace Expand
 
             if (Sector.exists(x, y))
             {
-                return Sector.load(x, y);
+                Sector saved_sector = Sector.load(x, y);
+                return saved_sector;
             }
             else
             {
@@ -81,7 +82,6 @@ namespace Expand
 
         public void loadAdjacentSectors()
         {
-            ;
             Sector[,] adjacent_sectors = getAdjacentSectors();
 
             // Find sectors that need to be unloaded
