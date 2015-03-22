@@ -13,11 +13,14 @@ namespace Expand
         public Color space_color;
         public Texture2D star_texture1 = Program.game.loadTexture("space//star1.png");
         public Texture2D star_texture2 = Program.game.loadTexture("space//star2.png");
-        private List<Sector> loaded_sectors = new List<Sector>();
-        private int[] player_sector = {-1, -1};
+        private Sector[,] loaded_sectors;
+        private int[] player_sector = {0, 0};
         public Space()
         {
             space_color = new Color(0, 0, 10);
+            loaded_sectors = getAdjacentSectors();
+            this.player_sector[0] = -1;
+            this.player_sector[1] = -1;
         }
 
         public override void update()
@@ -38,7 +41,12 @@ namespace Expand
             // Check if sector already is loaded
             foreach (Sector loaded_sector in loaded_sectors)
             {
-                if (loaded_sector.coords[0] == x && loaded_sector.coords[1] == y)
+                if (loaded_sector == null)
+                {
+                    // We unloaded this sector earlier this update
+                    continue;
+                }
+                else if (loaded_sector.coords[0] == x && loaded_sector.coords[1] == y && loaded_sector.is_loaded)
                 {
                     return loaded_sector;
                 }
@@ -56,48 +64,51 @@ namespace Expand
             return return_sector;
         }
 
-        public void loadAdjacentSectors()
-        {
-            Sector[] adjacent_sectors = getAdjacentSectors();
-
-            // Find sectors that need to be unloaded
-            for(int sector_counter = 0; sector_counter < loaded_sectors.Count(); sector_counter++)
+        public bool sectorStillAdjacent(Sector old_sector, Sector[,] adjacent_sectors){
+            bool still_adjacent = false;
+            for (int sector_row = 0; sector_row < adjacent_sectors.GetLength(0); sector_row++)
             {
-                bool keep_sector = false;
-                if (loaded_sectors[sector_counter] == null)
+                for (int sector_x = 0; sector_x < adjacent_sectors.GetLength(1); sector_x++)
                 {
-                    continue;
-                }
-                foreach(Sector new_sector in adjacent_sectors)
-                {
-                    if (loaded_sectors[sector_counter].coords.SequenceEqual(new_sector.coords))
+                    if (old_sector.coords.SequenceEqual(adjacent_sectors[sector_row, sector_x].coords))
                     {
-                        Console.WriteLine("setting " + loaded_sectors[sector_counter].formatName() + " to keep");
-                        keep_sector = true;
+                        still_adjacent = true;
                     }
                 }
-                if (!keep_sector)
+            }
+            return still_adjacent;
+        }
+
+        public void loadAdjacentSectors()
+        {
+            ;
+            Sector[,] adjacent_sectors = getAdjacentSectors();
+
+            // Find sectors that need to be unloaded
+            for (int sector_row = 0; sector_row < adjacent_sectors.GetLength(0); sector_row++)
+            {
+                for (int sector_x = 0; sector_x < adjacent_sectors.GetLength(1); sector_x++)
                 {
-                    // Kill all unneeded sectors
-                    Console.WriteLine("UNLOADING SECTOR " + loaded_sectors[sector_counter].formatName());
-                    loaded_sectors[sector_counter].unload();
-                    loaded_sectors[sector_counter] = null;
+                    if (!this.sectorStillAdjacent(loaded_sectors[sector_row, sector_x], adjacent_sectors))
+                    {
+                        // Sector needs to be unloaded
+                        Console.WriteLine("UNLOADING SECTOR " + loaded_sectors[sector_row, sector_x].formatName());
+                        loaded_sectors[sector_row, sector_x].unload();
+                        loaded_sectors[sector_row, sector_x] = null;
+                    }
                 }
             }
 
-            Sector[] temp_sectors = (Sector[]) adjacent_sectors.Clone();
-            for(int sector_counter = 0; sector_counter < adjacent_sectors.Length; sector_counter++)
+            // Load data the adjacent sector array
+            for (int sector_row = 0; sector_row < adjacent_sectors.GetLength(0); sector_row++)
             {
-                Sector new_loaded_sector = this.findSector(adjacent_sectors[sector_counter].coords[0], adjacent_sectors[sector_counter].coords[1]);
-                temp_sectors[sector_counter] = new_loaded_sector;
+                for (int sector_x = 0; sector_x < adjacent_sectors.GetLength(1); sector_x++)
+                {
+                    int[] sector_coords = adjacent_sectors[sector_row, sector_x].coords;
+                    adjacent_sectors[sector_row, sector_x] = findSector(sector_coords[0], sector_coords[1]);
+                }
             }
-
-            loaded_sectors.Clear();
-            foreach (Sector new_sector in temp_sectors)
-            {
-                this.loaded_sectors.Add(new_sector);
-            }
-            Debug.Assert(loaded_sectors.Count() < 10);
+            loaded_sectors = adjacent_sectors;
         }
 
         public int[] getPlayerSector()
@@ -128,19 +139,19 @@ namespace Expand
             return player_sector;
         }
 
-        public Sector[] getAdjacentSectors()
+        public Sector[,] getAdjacentSectors()
         {
-            Sector[] adjacent_sectors = new Sector[9];
+            Sector[,] adjacent_sectors = new Sector[3, 3];
             int[] player_sector = getPlayerSector();
-            adjacent_sectors[0] = new Sector(player_sector[0] + 1, player_sector[1]);
-            adjacent_sectors[1] = new Sector(player_sector[0] - 1, player_sector[1]);
-            adjacent_sectors[2] = new Sector(player_sector[0], player_sector[1] + 1);
-            adjacent_sectors[3] = new Sector(player_sector[0], player_sector[1] - 1);
-            adjacent_sectors[4] = new Sector(player_sector[0] + 1, player_sector[1] + 1);
-            adjacent_sectors[5] = new Sector(player_sector[0] + 1, player_sector[1] - 1);
-            adjacent_sectors[6] = new Sector(player_sector[0] - 1, player_sector[1] + 1);
-            adjacent_sectors[7] = new Sector(player_sector[0] - 1, player_sector[1] - 1);
-            adjacent_sectors[8] = new Sector(player_sector[0], player_sector[1]);
+            adjacent_sectors[0, 0] = new Sector(player_sector[0] - 1, player_sector[1] - 1);
+            adjacent_sectors[0, 1] = new Sector(player_sector[0], player_sector[1] - 1);
+            adjacent_sectors[0, 2] = new Sector(player_sector[0] + 1, player_sector[1] - 1);
+            adjacent_sectors[1, 0] = new Sector(player_sector[0] - 1, player_sector[1]);
+            adjacent_sectors[1, 1] = new Sector(player_sector[0], player_sector[1]);
+            adjacent_sectors[1, 2] = new Sector(player_sector[0] + 1, player_sector[1]);
+            adjacent_sectors[2, 0] = new Sector(player_sector[0] - 1, player_sector[1] + 1);
+            adjacent_sectors[2, 1] = new Sector(player_sector[0], player_sector[1] + 1);
+            adjacent_sectors[2, 2] = new Sector(player_sector[0] + 1, player_sector[1] + 1);
             return adjacent_sectors;
         }
 

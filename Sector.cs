@@ -11,6 +11,7 @@ namespace Expand
         public List<Star> stars = new List<Star>();
         public List<SpaceObject> space_objects = new List<SpaceObject>();
         public String sector_name;
+        public bool is_loaded = false;
         public int[] coords = new int[2];
         public Sector(int x, int y)
         {
@@ -30,6 +31,8 @@ namespace Expand
                 Star new_star = new Star(x_coord + 5000*coords[0], y_coord + 5000*coords[1]);
                 this.space_objects.Add(new_star);
             }
+            this.is_loaded = true;
+            this.save();
             Console.WriteLine("Generated " + sector_name);
         }
 
@@ -55,6 +58,7 @@ namespace Expand
             {
                 space_object.setDead();
             }
+            this.is_loaded = false;
         }
 
         public void save()
