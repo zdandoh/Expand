@@ -38,8 +38,8 @@ namespace Expand
             this.IsMouseVisible = true;
             game_time.Start();
             object_handler = new ObjectHandler();
-            ship = new Ship();
             space = new Space();
+            ship = new Ship();
             base.Initialize();
         }
 

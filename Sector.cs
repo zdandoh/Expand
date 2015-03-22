@@ -9,14 +9,14 @@ namespace Expand
     public class Sector
     {
         public List<Star> stars = new List<Star>();
-        public List<GameObject> space_objects = new List<GameObject>();
+        public List<SpaceObject> space_objects = new List<SpaceObject>();
         public String sector_name;
-        public int[] sector_coords = {0, 0};
+        public int[] coords = new int[2];
         public Sector(int x, int y)
         {
             sector_name = "sector-" + x + "-" + y;
-            sector_coords[0] = x;
-            sector_coords[1] = y;
+            coords[0] = x;
+            coords[1] = y;
         }
 
         public void generate()
@@ -27,8 +27,8 @@ namespace Expand
             {
                 int x_coord = Program.game.rand_gen.Next(20, SECTOR_SIZE - 20);
                 int y_coord = Program.game.rand_gen.Next(20, SECTOR_SIZE - 20);
-                Star new_star = new Star(x_coord + 5000*sector_coords[0], y_coord + 5000*sector_coords[1]);
-                this.stars.Add(new_star);
+                Star new_star = new Star(x_coord + 5000*coords[0], y_coord + 5000*coords[1]);
+                this.space_objects.Add(new_star);
             }
             Console.WriteLine("Generated " + sector_name);
         }
@@ -39,11 +39,21 @@ namespace Expand
             return File.Exists("space//" + sector_name + ".json");
         }
 
+        public static bool exists(int x, int y)
+        {
+            return File.Exists("space//" + "sector-" + x + "-" + y + ".json");
+        }
+
+        public String formatName()
+        {
+            return coords[0] + " " + coords[1];
+        }
+
         public void unload()
         {
-            foreach (Star star in stars)
+            foreach (SpaceObject space_object in space_objects)
             {
-                star.setDead();
+                space_object.setDead();
             }
         }
 

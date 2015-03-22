@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -12,7 +13,7 @@ namespace Expand
         public Color space_color;
         public Texture2D star_texture1 = Program.game.loadTexture("space//star1.png");
         public Texture2D star_texture2 = Program.game.loadTexture("space//star2.png");
-        private List<Sector> sectors = new List<Sector>();
+        private List<Sector> loaded_sectors = new List<Sector>();
         private int[] player_sector = {-1, -1};
         public Space()
         {
@@ -24,34 +25,79 @@ namespace Expand
             if (!player_sector.SequenceEqual(getPlayerSector()))
             {
                 player_sector = (int[]) getPlayerSector().Clone();
+                Console.WriteLine("Now in sector " + player_sector[0] + " " + player_sector[1] + " LOADING ADJACENTS!");
                 loadAdjacentSectors();
             }
+        }
+
+        public Sector findSector(int x, int y)
+        {
+            // Checks if sector is loaded, generates new sector, or loads from file
+            Sector return_sector;
+
+            // Check if sector already is loaded
+            foreach (Sector loaded_sector in loaded_sectors)
+            {
+                if (loaded_sector.coords[0] == x && loaded_sector.coords[1] == y)
+                {
+                    return loaded_sector;
+                }
+            }
+
+            if (Sector.exists(x, y))
+            {
+                return Sector.load(x, y);
+            }
+            else
+            {
+                return_sector = new Sector(x, y);
+                return_sector.generate();
+            }
+            return return_sector;
         }
 
         public void loadAdjacentSectors()
         {
             Sector[] adjacent_sectors = getAdjacentSectors();
-            // Kill all loaded sectors
-            foreach (Sector loaded_sector in sectors)
+
+            // Find sectors that need to be unloaded
+            for(int sector_counter = 0; sector_counter < loaded_sectors.Count(); sector_counter++)
             {
-                loaded_sector.unload();
+                bool keep_sector = false;
+                if (loaded_sectors[sector_counter] == null)
+                {
+                    continue;
+                }
+                foreach(Sector new_sector in adjacent_sectors)
+                {
+                    if (loaded_sectors[sector_counter].coords.SequenceEqual(new_sector.coords))
+                    {
+                        Console.WriteLine("setting " + loaded_sectors[sector_counter].formatName() + " to keep");
+                        keep_sector = true;
+                    }
+                }
+                if (!keep_sector)
+                {
+                    // Kill all unneeded sectors
+                    Console.WriteLine("UNLOADING SECTOR " + loaded_sectors[sector_counter].formatName());
+                    loaded_sectors[sector_counter].unload();
+                    loaded_sectors[sector_counter] = null;
+                }
             }
-            sectors.Clear();
-            foreach (Sector adjacent in adjacent_sectors)
+
+            Sector[] temp_sectors = (Sector[]) adjacent_sectors.Clone();
+            for(int sector_counter = 0; sector_counter < adjacent_sectors.Length; sector_counter++)
             {
-                Sector new_sector = new Sector(adjacent.sector_coords[0], adjacent.sector_coords[1]);
-                if (adjacent.exists())
-                {
-                    new_sector = Sector.load(adjacent.sector_coords[0], adjacent.sector_coords[1]);
-                }
-                else
-                {
-                    new_sector.generate();
-                    new_sector.save();
-                }
-                sectors.Add(new_sector);
-                Console.WriteLine(adjacent.sector_coords[0] + " " + adjacent.sector_coords[1]);
+                Sector new_loaded_sector = this.findSector(adjacent_sectors[sector_counter].coords[0], adjacent_sectors[sector_counter].coords[1]);
+                temp_sectors[sector_counter] = new_loaded_sector;
             }
+
+            loaded_sectors.Clear();
+            foreach (Sector new_sector in temp_sectors)
+            {
+                this.loaded_sectors.Add(new_sector);
+            }
+            Debug.Assert(loaded_sectors.Count() < 10);
         }
 
         public int[] getPlayerSector()
