@@ -19,12 +19,29 @@ namespace Expand
         private int x_velocity = 0;
         private double y_velocity_change = 0;
         private double x_velocity_change = 0;
+        private double space_velocity_change = 0;
         private int VELOCITY_COOLDOWN = 100;
 
         public Ship()
         {
             ship_texture = Program.game.loadTexture("ships//ship.png");
             this.draw_location = (int[]) this.pos.Clone();
+        }
+
+        public int moveCloserToZero(int number)
+        {
+            if (number < 0)
+            {
+                return number + 1;
+            }
+            else if (number > 0)
+            {
+                return number - 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public override void update()
@@ -53,10 +70,11 @@ namespace Expand
                 x_velocity_change = Program.game.game_time.ElapsedMilliseconds;
                 this.preserve_rotation = false;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && Program.game.game_time.ElapsedMilliseconds - space_velocity_change > VELOCITY_COOLDOWN)
             {
-                y_velocity = 0;
-                x_velocity = 0;
+                y_velocity = moveCloserToZero(y_velocity);
+                x_velocity = moveCloserToZero(x_velocity);
+                space_velocity_change = Program.game.game_time.ElapsedMilliseconds;
                 this.preserve_rotation = true;
             }
 

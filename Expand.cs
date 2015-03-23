@@ -21,6 +21,7 @@ namespace Expand
         public ObjectHandler object_handler;
         public Space space;
         public Ship ship;
+        public GUI gui;
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
@@ -40,6 +41,7 @@ namespace Expand
             object_handler = new ObjectHandler();
             ship = new Ship();
             space = new Space();
+            gui = new GUI();
             base.Initialize();
         }
 
@@ -84,7 +86,8 @@ namespace Expand
             if ((x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000)
             {
                 Vector2 pos_vector = new Vector2(x - Program.game.ship.pos[0] + Program.game.ship.draw_location[0], y - Program.game.ship.pos[1] + Program.game.ship.draw_location[1]);
-                this.spriteBatch.Draw(texture, pos_vector);
+                Vector2 origin = new Vector2(0, 0);
+                this.spriteBatch.Draw(texture, pos_vector, null, Color.White, 0F, origin, 1, SpriteEffects.None, 0);
             }
         }
     }

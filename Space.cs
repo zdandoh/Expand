@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Expand
 {
@@ -13,6 +14,8 @@ namespace Expand
         public Color space_color;
         public Texture2D star_texture1 = Program.game.loadTexture("space//star1.png");
         public Texture2D star_texture2 = Program.game.loadTexture("space//star2.png");
+        public Texture2D asteroid_texture = Program.game.loadTexture("space//asteroid.png");
+        public const int SECTOR_SIZE = 5000;
         private Sector[,] loaded_sectors;
         private int[] player_sector = {0, 0};
         public Space()
@@ -175,6 +178,8 @@ namespace Expand
     {
         public int[] pos = {-1, -1};
         public int texture_number;
+        public static int MAX_SIZE = 20;
+        public static int PER_SECTOR = 5000;
 
         public Star(int x, int y)
         {
@@ -200,6 +205,29 @@ namespace Expand
                 return_texture = Program.game.space.star_texture2;
             }
             return return_texture;
+        }
+    }
+
+    public class Asteroid: SpaceObject
+    {
+        public int radius;
+        public static int MAX_SIZE = 75;
+        public static int PER_SECTOR = 15;
+        public int[] pos = {0, 0};
+        public int[] center_point = {0, 0};
+
+        public Asteroid(int x, int y)
+        {
+            this.pos[0] = x;
+            this.pos[1] = y;
+            this.radius = Program.game.rand_gen.Next(25, MAX_SIZE);
+            this.center_point[0] = this.pos[0] + this.radius / 2;
+            this.center_point[1] = this.pos[1] + this.radius / 2;
+        }
+
+        public override void draw()
+        {
+            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1]);
         }
     }
 }

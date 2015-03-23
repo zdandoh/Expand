@@ -1,17 +1,22 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Expand
 {
     public class Sector
     {
         public List<Star> stars = new List<Star>();
+        public List<Asteroid> asteroids = new List<Asteroid>();
+        public List<List<SpaceObject>> space_objects = new List<List<SpaceObject>>();
         public String sector_name;
         public String sector_file_location;
+        public const int SECTOR_SIZE = Space.SECTOR_SIZE;
         public bool is_loaded = false;
         public int[] coords = new int[2];
         public Sector(int x, int y)
@@ -24,18 +29,33 @@ namespace Expand
 
         public void generate()
         {
-            int SECTOR_SIZE = 5000;
             int STAR_COUNT = 5000;
-            for (int counter = 0; counter < STAR_COUNT; counter++)
+            for (int counter = 0; counter < Star.PER_SECTOR; counter++)
             {
-                int x_coord = Program.game.rand_gen.Next(20, SECTOR_SIZE - 20);
-                int y_coord = Program.game.rand_gen.Next(20, SECTOR_SIZE - 20);
-                Star new_star = new Star(x_coord + 5000*coords[0], y_coord + 5000*coords[1]);
+                int[] star_coords = getNewObjectPos(Star.MAX_SIZE);
+                Star new_star = new Star(star_coords[0], star_coords[1]);
                 this.stars.Add(new_star);
             }
+            for (int asteroid_counter = 0; asteroid_counter < Asteroid.PER_SECTOR; asteroid_counter++)
+            {
+                int[] asteroid_coords = getNewObjectPos(Asteroid.MAX_SIZE);
+                Asteroid new_asteroid = new Asteroid(asteroid_coords[0], asteroid_coords[1]);
+            }
             this.is_loaded = true;
-            this.save();
+
+            ThreadStart thread_target = new ThreadStart(this.save);
+            Thread sector_saver = new Thread(thread_target);
+            sector_saver.IsBackground = true;
+            sector_saver.Start();
             Console.WriteLine("Generated " + sector_name);
+        }
+
+        public int[] getNewObjectPos(int size_offset = 0)
+        {
+            int[] pos = { 0, 0 };
+            pos[0] = Program.game.rand_gen.Next(size_offset, SECTOR_SIZE - size_offset) + SECTOR_SIZE*this.coords[0];
+            pos[1] = Program.game.rand_gen.Next(size_offset, SECTOR_SIZE - size_offset) + SECTOR_SIZE * this.coords[1];
+            return pos;
         }
 
         public bool exists()
@@ -57,6 +77,10 @@ namespace Expand
         public void unload()
         {
             foreach (SpaceObject space_object in stars)
+            {
+                space_object.setDead();
+            }
+            foreach (SpaceObject space_object in asteroids)
             {
                 space_object.setDead();
             }
