@@ -11,7 +11,7 @@ namespace Expand
     public class Ship: GameObject
     {
         private Texture2D ship_texture;
-        public int[] pos = {400 - 15, 300 - 50};
+        public int[] pos = {Program.game.screen_size[0] / 2, Program.game.screen_size[1] / 2};
         public int[] draw_location;
         private float radians = 0;
         private bool preserve_rotation = false;
@@ -25,6 +25,8 @@ namespace Expand
         public Ship()
         {
             ship_texture = Program.game.loadTexture("ships//ship.png");
+            this.pos[0] -= ship_texture.Width / 2;
+            this.pos[1] -= ship_texture.Height / 2;
             this.draw_location = (int[]) this.pos.Clone();
         }
 

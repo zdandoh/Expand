@@ -22,6 +22,7 @@ namespace Expand
         public Space space;
         public Ship ship;
         public GUI gui;
+        public int[] screen_size = { 800, 600 };
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
@@ -30,12 +31,14 @@ namespace Expand
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferHeight = screen_size[1];
+            graphics.PreferredBackBufferWidth = screen_size[0];
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
             game_time.Start();
             object_handler = new ObjectHandler();
