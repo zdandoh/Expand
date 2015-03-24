@@ -7,4 +7,5 @@ You aren't the only person trying to build an empire, though. Other species with
 
 A highly militaristic race may attack one of your primary food producting planets, or may cripple one of your primary trade partners.
 
-There's a lot of room for expansion of the concept.
+Build a small outpost with bots that automatically harvest ore.
+All this and more in the automagical exploration game "Expand".
