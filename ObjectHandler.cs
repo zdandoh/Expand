@@ -22,8 +22,6 @@ namespace Expand
 
         public void updateObjects()
         {
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
             // Move from middle list to real list
             if (!middle_list_locked)
             {
@@ -44,7 +42,6 @@ namespace Expand
                 }
             }
             game_objects.RemoveAll(game_obj => game_obj == null);
-            Console.WriteLine(Thread.CurrentThread.Name + " " + timer.ElapsedMilliseconds);
         }
 
         public void drawObjects()

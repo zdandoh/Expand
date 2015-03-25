@@ -13,7 +13,6 @@ namespace Expand
     {
         public List<Star> stars = new List<Star>();
         public List<Asteroid> asteroids = new List<Asteroid>();
-        public List<List<SpaceObject>> space_objects = new List<List<SpaceObject>>();
         public String sector_name;
         public String sector_file_location;
         public const int SECTOR_SIZE = Space.SECTOR_SIZE;
@@ -39,6 +38,7 @@ namespace Expand
             {
                 int[] asteroid_coords = getNewObjectPos(Asteroid.MAX_SIZE);
                 Asteroid new_asteroid = new Asteroid(asteroid_coords[0], asteroid_coords[1]);
+                this.asteroids.Add(new_asteroid);
             }
             this.is_loaded = true;
 
