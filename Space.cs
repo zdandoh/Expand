@@ -32,7 +32,12 @@ namespace Expand
             {
                 player_sector = (int[]) getPlayerSector().Clone();
                 Console.WriteLine("Now in sector " + player_sector[0] + " " + player_sector[1] + " LOADING ADJACENTS!");
-                loadAdjacentSectors();
+                ThreadStart thread_target = new ThreadStart(loadAdjacentSectors);
+                Thread sector_loader = new Thread(thread_target);
+                sector_loader.IsBackground = true;
+                sector_loader.Name = "Sector Loader";
+                Program.game.object_handler.middle_list_locked = true;
+                sector_loader.Start();
             }
         }
 
@@ -112,6 +117,7 @@ namespace Expand
                 }
             }
             loaded_sectors = adjacent_sectors;
+            Program.game.object_handler.middle_list_locked = false;
         }
 
         public int[] getPlayerSector()

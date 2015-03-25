@@ -29,7 +29,6 @@ namespace Expand
 
         public void generate()
         {
-            int STAR_COUNT = 5000;
             for (int counter = 0; counter < Star.PER_SECTOR; counter++)
             {
                 int[] star_coords = getNewObjectPos(Star.MAX_SIZE);
