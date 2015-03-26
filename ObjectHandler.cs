@@ -46,7 +46,7 @@ namespace Expand
 
         public void drawObjects()
         {
-            Program.game.spriteBatch.Begin();
+            Program.game.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             foreach (GameObject obj in game_objects)
             {
                 obj.draw();

@@ -13,6 +13,7 @@ namespace Expand
         private Texture2D ship_texture;
         public int[] pos = {Program.game.screen_size[0] / 2, Program.game.screen_size[1] / 2};
         public int[] draw_location;
+        public int tool_selected = 1;
         private float radians = 0;
         private bool preserve_rotation = false;
         private int y_velocity = 0;
@@ -46,7 +47,7 @@ namespace Expand
             }
         }
 
-        public override void update()
+        public void updatePosition()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W) && Program.game.game_time.ElapsedMilliseconds - y_velocity_change > VELOCITY_COOLDOWN)
             {
@@ -104,6 +105,24 @@ namespace Expand
             {
                 radians = (float)(Math.Atan2(y_velocity, x_velocity));
             }
+        }
+
+        public void updateTool()
+        {
+            if (this.tool_selected == 1)
+            {
+                // Utility laser
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                {
+
+                }
+            }
+        }
+
+        public override void update()
+        {
+            this.updatePosition();
+            this.updateTool();
         }
 
         public override void draw()
