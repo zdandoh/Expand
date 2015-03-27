@@ -24,6 +24,7 @@ namespace Expand
         public Ship ship;
         public GUI gui;
         public int[] screen_size = { 800, 600 };
+        public Texture2D line_texture;
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
@@ -53,7 +54,8 @@ namespace Expand
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            line_texture = new Texture2D(GraphicsDevice, 1, 1);
+            line_texture.SetData<Color>(new Color[] { Color.White });
             // TODO: use this.Content to load your game content here
         }
 
@@ -82,6 +84,17 @@ namespace Expand
         public Texture2D loadTexture(String file_path)
         {
             return this.Content.Load<Texture2D>(file_path);
+        }
+
+        public void drawLine(int x1, int y1, int x2, int y2, int thickness = 1)
+        {
+            Vector2 start = new Vector2(x1, y1);
+            Vector2 end = new Vector2(x2, y2);
+            Vector2 along_line = end - start;
+            float line_angle = (float) Math.Atan2(along_line.Y, along_line.X);
+            Rectangle line_rect = new Rectangle((int)start.X, (int)start.Y, (int)along_line.Length(), thickness);
+            Vector2 origin = new Vector2(0, 0);
+            this.spriteBatch.Draw(this.line_texture, line_rect, null, Color.Blue, line_angle, origin, SpriteEffects.None, 0);
         }
 
         public void drawSprite(Texture2D texture, int x, int y)

@@ -107,14 +107,14 @@ namespace Expand
             }
         }
 
-        public void updateTool()
+        public void drawTool()
         {
             if (this.tool_selected == 1)
             {
                 // Utility laser
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
-
+                    Program.game.drawLine(this.draw_location[0], this.draw_location[1], Mouse.GetState().Position.X, Mouse.GetState().Position.Y, 2);
                 }
             }
         }
@@ -122,11 +122,14 @@ namespace Expand
         public override void update()
         {
             this.updatePosition();
-            this.updateTool();
         }
 
         public override void draw()
         {
+            // Draw tool
+            this.drawTool();
+
+            // Draw ship
             Vector2 pos_vector = new Vector2(draw_location[0], draw_location[1]);
             Vector2 origin = new Vector2(10, 10);
             Program.game.spriteBatch.Draw(ship_texture, pos_vector, null, Color.White, radians, origin, 1, SpriteEffects.None, 1);
