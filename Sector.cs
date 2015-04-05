@@ -40,12 +40,8 @@ namespace Expand
                 Asteroid new_asteroid = new Asteroid(asteroid_coords[0], asteroid_coords[1]);
                 this.asteroids.Add(new_asteroid);
             }
+            this.save();
             this.is_loaded = true;
-
-            ThreadStart thread_target = new ThreadStart(this.save);
-            Thread sector_saver = new Thread(thread_target);
-            sector_saver.IsBackground = true;
-            sector_saver.Start();
             Console.WriteLine("Generated " + sector_name);
         }
 

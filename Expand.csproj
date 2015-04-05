@@ -44,8 +44,13 @@
     <Compile Include="Sector.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="Space.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="C3.XNA.Primitives2D">
+      <HintPath>..\..\..\..\..\Desktop\C3.XNA.Primitives2D.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>

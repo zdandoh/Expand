@@ -1,11 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using C3.XNA;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using System.IO;
 
 namespace Expand
 {
@@ -16,10 +18,15 @@ namespace Expand
         public Texture2D star_texture2 = Program.game.loadTexture("space//star2.png");
         public Texture2D asteroid_texture = Program.game.loadTexture("space//asteroid.png");
         public const int SECTOR_SIZE = 5000;
+        public const bool CLEAR_SECTOR = true; // Resets the sector files at runtime if true
         private Sector[,] loaded_sectors;
         private int[] player_sector = {0, 0};
         public Space()
         {
+            if (CLEAR_SECTOR)
+            {
+                Space.clearSpace();
+            }
             space_color = new Color(0, 0, 10);
             loaded_sectors = getAdjacentSectors();
             this.player_sector[0] = -1;
@@ -38,6 +45,16 @@ namespace Expand
                 sector_loader.Name = "Sector Loader";
                 Program.game.object_handler.middle_list_locked = true;
                 sector_loader.Start();
+            }
+        }
+
+        private static void clearSpace()
+        {
+            // Deletes all saved sector files
+            DirectoryInfo space_dir = new DirectoryInfo("space");
+            foreach (FileInfo sector_file in space_dir.GetFiles())
+            {
+                sector_file.Delete();
             }
         }
 
@@ -216,9 +233,11 @@ namespace Expand
 
     public class Asteroid: SpaceObject
     {
-        public int radius;
-        public static int MAX_SIZE = 75;
+        public int diameter;
+        public static int MAX_SIZE = 100;
+        public static int MIN_SIZE = 25;
         public static int PER_SECTOR = 15;
+        public static int PADDING_DISTANCE = 15;
         public int[] pos = {0, 0};
         public int[] center_point = {0, 0};
 
@@ -226,14 +245,44 @@ namespace Expand
         {
             this.pos[0] = x;
             this.pos[1] = y;
-            this.radius = Program.game.rand_gen.Next(25, MAX_SIZE);
-            this.center_point[0] = this.pos[0] + this.radius / 2;
-            this.center_point[1] = this.pos[1] + this.radius / 2;
+            this.diameter = Program.game.rand_gen.Next(MIN_SIZE, MAX_SIZE);
+            this.center_point[0] = this.pos[0] + this.diameter / 2;
+            this.center_point[1] = this.pos[1] + this.diameter / 2;
         }
 
         public override void draw()
         {
-            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1]);
+            float scale = diameter / 50f;
+            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale);
+        }
+
+        public bool collideLine()
+        {
+            bool collides = true;
+            int[] p1 = { 0, 0 };
+            int[] p2 = {6, 6};
+            int[] c = {3, 3};
+            int r = 4;
+            double collide_equation_result = Math.Abs((p1[0] - p2[0]) * (c[0] - p1[0]) + (p2[1] - p1[1]) * (c[1] - p1[1])) / Math.Sqrt(Math.Pow((p1[0] - p2[0]), 2) + Math.Pow((p2[1] - p1[1]), 2));
+            Console.WriteLine(collide_equation_result);
+            if (r >= collide_equation_result)
+            {
+                Console.WriteLine("COLLIDES!");
+            }
+            else
+            {
+                Console.WriteLine("AHRGH");
+            }
+            return collides;
+        }
+
+        public override void update()
+        {
+            if (Util.distance(Program.game.ship.pos[0], Program.game.ship.pos[1], this.center_point[0], this.center_point[1]) <= this.diameter / 2 + Asteroid.PADDING_DISTANCE)
+            {
+                // Stop the player from moving closer to asteroid
+                Program.game.ship.reverse();
+            }
         }
     }
 }

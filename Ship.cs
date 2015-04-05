@@ -47,6 +47,12 @@ namespace Expand
             }
         }
 
+        public void reverse()
+        {
+            this.x_velocity = -this.x_velocity;
+            this.y_velocity = -this.y_velocity;
+        }
+
         public void updatePosition()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W) && Program.game.game_time.ElapsedMilliseconds - y_velocity_change > VELOCITY_COOLDOWN)

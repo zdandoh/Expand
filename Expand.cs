@@ -97,14 +97,14 @@ namespace Expand
             this.spriteBatch.Draw(this.line_texture, line_rect, null, Color.Blue, line_angle, origin, SpriteEffects.None, 0);
         }
 
-        public void drawSprite(Texture2D texture, int x, int y)
+        public void drawSprite(Texture2D texture, int x, int y, float scale = 1)
         {
             // Check if sprite is in player view
             if ((x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000)
             {
                 Vector2 pos_vector = new Vector2(x - Program.game.ship.pos[0] + Program.game.ship.draw_location[0], y - Program.game.ship.pos[1] + Program.game.ship.draw_location[1]);
                 Vector2 origin = new Vector2(0, 0);
-                this.spriteBatch.Draw(texture, pos_vector, null, Color.White, 0F, origin, 1, SpriteEffects.None, 0);
+                this.spriteBatch.Draw(texture, pos_vector, null, Color.White, 0F, origin, scale, SpriteEffects.None, 0);
             }
         }
     }
