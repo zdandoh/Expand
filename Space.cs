@@ -213,7 +213,7 @@ namespace Expand
 
         public override void draw()
         {
-            Program.game.drawSprite(this.getTexture(texture_number), pos[0], pos[1]);
+            Program.game.drawSprite(this.getTexture(texture_number), pos[0], pos[1], layer: 0f);
         }
 
         public Texture2D getTexture(int number)
@@ -253,27 +253,7 @@ namespace Expand
         public override void draw()
         {
             float scale = diameter / 50f;
-            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale);
-        }
-
-        public bool collideLine()
-        {
-            bool collides = true;
-            int[] p1 = { 0, 0 };
-            int[] p2 = {6, 6};
-            int[] c = {3, 3};
-            int r = 4;
-            double collide_equation_result = Math.Abs((p1[0] - p2[0]) * (c[0] - p1[0]) + (p2[1] - p1[1]) * (c[1] - p1[1])) / Math.Sqrt(Math.Pow((p1[0] - p2[0]), 2) + Math.Pow((p2[1] - p1[1]), 2));
-            Console.WriteLine(collide_equation_result);
-            if (r >= collide_equation_result)
-            {
-                Console.WriteLine("COLLIDES!");
-            }
-            else
-            {
-                Console.WriteLine("AHRGH");
-            }
-            return collides;
+            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale, layer: 0.1f);
         }
 
         public override void update()
@@ -282,6 +262,11 @@ namespace Expand
             {
                 // Stop the player from moving closer to asteroid
                 Program.game.ship.reverse();
+            }
+            int[] asteroid_draw_pos = Program.game.drawOffset(this.center_point[0], this.center_point[1]);
+            if (Program.game.inView(this.center_point[0], this.center_point[1]) && Program.game.ship.collideLaser(asteroid_draw_pos[0], asteroid_draw_pos[1], this.diameter / 2))
+            {
+                Console.WriteLine("COLLIDING");
             }
         }
     }

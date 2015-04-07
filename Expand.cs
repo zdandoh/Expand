@@ -97,14 +97,28 @@ namespace Expand
             this.spriteBatch.Draw(this.line_texture, line_rect, null, Color.Blue, line_angle, origin, SpriteEffects.None, 0);
         }
 
-        public void drawSprite(Texture2D texture, int x, int y, float scale = 1)
+        public int[] drawOffset(int x, int y)
+        {
+            // Offsets a set of coordinates as they would be if they were drawn
+            int new_x = x - Program.game.ship.pos[0] + Program.game.ship.draw_location[0];
+            int new_y = y - Program.game.ship.pos[1] + Program.game.ship.draw_location[1];
+            return new int[] {new_x, new_y};
+        }
+
+        public bool inView(int x, int y)
         {
             // Check if sprite is in player view
-            if ((x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000)
+            return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000;
+        }
+
+        public void drawSprite(Texture2D texture, int x, int y, float scale = 1, float layer = 1)
+        {
+            if (this.inView(x, y))
             {
-                Vector2 pos_vector = new Vector2(x - Program.game.ship.pos[0] + Program.game.ship.draw_location[0], y - Program.game.ship.pos[1] + Program.game.ship.draw_location[1]);
+                int[] draw_pos = this.drawOffset(x, y);
+                Vector2 pos_vector = new Vector2(draw_pos[0], draw_pos[1]);
                 Vector2 origin = new Vector2(0, 0);
-                this.spriteBatch.Draw(texture, pos_vector, null, Color.White, 0F, origin, scale, SpriteEffects.None, 0);
+                this.spriteBatch.Draw(texture, pos_vector, null, Color.White, 0F, origin, scale, SpriteEffects.None, layer);
             }
         }
     }
