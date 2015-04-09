@@ -61,6 +61,7 @@ namespace Expand
             int x2 = Mouse.GetState().Position.X;
             int y2 = Mouse.GetState().Position.Y;
             double line_distance = Util.distance(x1, y1, x2, y2);
+            //double distance_from_ship = Util.distance(x1, y1, a, b);
 
             double direction_x = (x2 - x1) / line_distance;
             double direction_y = (y2 - y1) / line_distance;
@@ -71,52 +72,19 @@ namespace Expand
             double intersect_y = t * direction_y + y1;
 
             double center_to_line = Util.distance(a, b, intersect_x, intersect_y);
-            if (center_to_line < r)
+            if (center_to_line < r && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 double distance_from_circle = Util.distance(r, center_to_line);
                 int int_point1_x = (int) ((t - distance_from_circle) * direction_x + x1);
                 int int_point1_y = (int)((t - distance_from_circle) * direction_y + y1);
-                if (int_point1_x <= x2 - Program.game.ship.draw_location[0] && int_point1_y <= y2 - Program.game.ship.draw_location[1])
+                double d1 = Util.distance(x1, y1, int_point1_x, int_point1_y);
+                double d2 = Util.distance(x2, y2, int_point1_x, int_point1_y);
+                int added = (int) (d1 + d2);
+
+                if (added == (int) line_distance)
                 {
                     does_collide = true;
                 }
-            }
-            return does_collide;
-        }
-
-        public bool collideLaser2(int a, int b, int r)
-        {
-            bool does_collide = false;
-            int x1 = Program.game.ship.draw_location[0];
-            int y1 = Program.game.ship.draw_location[1];
-            int x2 = Mouse.GetState().Position.X;
-            int y2 = Mouse.GetState().Position.Y;
-
-            double line_area = Math.Abs((x2 - x1) * (b - y1) - (a - x1) * (y2 - y1));
-            double LAB = Util.distance(x1, y1, x2, y2);
-            double h = line_area / LAB;
-
-            if (h < r)
-            {
-                does_collide = true;
-            }
-            return does_collide;
-        }
-
-        public bool collideLaser3(int a, int b, int r)
-        {
-            bool does_collide = false;
-            Vector3 circle_center = new Vector3(a, b, 0);
-            BoundingSphere circle = new BoundingSphere(circle_center, r);
-            Vector3 ray_position = new Vector3(Program.game.ship.draw_location[0], Program.game.ship.draw_location[1], 0);
-            Vector3 ray_direction = new Vector3(Mouse.GetState().Position.X, Mouse.GetState().Position.Y, 0);
-            Ray dat_ray = new Ray(ray_position, ray_direction);
-            float? lol = dat_ray.Intersects(circle);
-            if (lol != null)
-            {
-                ;
-                Console.WriteLine("WOO");
-                does_collide = true;
             }
             return does_collide;
         }

@@ -234,6 +234,7 @@ namespace Expand
     public class Asteroid: SpaceObject
     {
         public int diameter;
+        public int minerals;
         public static int MAX_SIZE = 100;
         public static int MIN_SIZE = 25;
         public static int PER_SECTOR = 15;
@@ -246,6 +247,7 @@ namespace Expand
             this.pos[0] = x;
             this.pos[1] = y;
             this.diameter = Program.game.rand_gen.Next(MIN_SIZE, MAX_SIZE);
+            this.minerals = this.diameter * 5;
             this.center_point[0] = this.pos[0] + this.diameter / 2;
             this.center_point[1] = this.pos[1] + this.diameter / 2;
         }
@@ -254,6 +256,19 @@ namespace Expand
         {
             float scale = diameter / 50f;
             Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale, layer: 0.1f);
+        }
+
+        public int harvestMinerals(int count = 1)
+        {
+            if (this.minerals > 0)
+            {
+                this.minerals -= count;
+            }
+            else
+            {
+                return 0;
+            }
+            return count;
         }
 
         public override void update()
@@ -266,7 +281,7 @@ namespace Expand
             int[] asteroid_draw_pos = Program.game.drawOffset(this.center_point[0], this.center_point[1]);
             if (Program.game.inView(this.center_point[0], this.center_point[1]) && Program.game.ship.collideLaser(asteroid_draw_pos[0], asteroid_draw_pos[1], this.diameter / 2))
             {
-                Console.WriteLine("COLLIDING");
+                this.harvestMinerals();
             }
         }
     }
