@@ -14,6 +14,7 @@ namespace Expand
         public int[] pos = {Program.game.screen_size[0] / 2, Program.game.screen_size[1] / 2};
         public int[] draw_location;
         public int tool_selected = 1;
+        public int[] tool_end = { -1, -1 };
         private float radians = 0;
         private bool preserve_rotation = false;
         private int y_velocity = 0;
@@ -83,6 +84,8 @@ namespace Expand
 
                 if (added == (int) line_distance)
                 {
+                    this.tool_end[0] = int_point1_x;
+                    this.tool_end[1] = int_point1_y;
                     does_collide = true;
                 }
             }
@@ -156,8 +159,10 @@ namespace Expand
                 // Utility laser
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
-                    Program.game.drawLine(this.draw_location[0], this.draw_location[1], Mouse.GetState().Position.X, Mouse.GetState().Position.Y, 2);
+                    Program.game.drawLine(this.draw_location[0], this.draw_location[1], this.tool_end[0], this.tool_end[1], 2);
                 }
+                this.tool_end[0] = Mouse.GetState().Position.X;
+                this.tool_end[1] = Mouse.GetState().Position.Y;
             }
         }
 
