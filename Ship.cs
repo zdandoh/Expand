@@ -161,14 +161,14 @@ namespace Expand
                 {
                     Program.game.drawLine(this.draw_location[0], this.draw_location[1], this.tool_end[0], this.tool_end[1], 2);
                 }
-                this.tool_end[0] = Mouse.GetState().Position.X;
-                this.tool_end[1] = Mouse.GetState().Position.Y;
             }
         }
 
         public override void update()
         {
             this.updatePosition();
+            this.tool_end[0] = Mouse.GetState().Position.X;
+            this.tool_end[1] = Mouse.GetState().Position.Y;
         }
 
         public override void draw()
