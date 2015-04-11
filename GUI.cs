@@ -15,6 +15,7 @@ namespace Expand
         public int special_additive = 0;
         public Texture2D hotbar = Program.game.loadTexture("gui//hotbar.png");
         public Texture2D hotbar_selector = Program.game.loadTexture("gui//hotbar_selector.png");
+        public Texture2D tool1_icon = Program.game.loadTexture("gui//icon//mining_laser.png");
 
         public GUI()
         {
@@ -82,7 +83,9 @@ namespace Expand
                 Vector2 origin = new Vector2(0, 0);
                 Program.game.spriteBatch.Draw(hotbar, pos_vector, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0.99f);
                 Program.game.spriteBatch.Draw(hotbar_selector, selector_pos, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
+                Program.game.spriteBatch.Draw(tool1_icon, selector_pos, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
             }
+
             int[] text_pos = { 10, 10 };
             Program.game.drawText(Program.game.ship.minerals.ToString(), text_pos, Color.White);
         }

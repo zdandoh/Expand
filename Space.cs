@@ -234,7 +234,7 @@ namespace Expand
     public class Asteroid: SpaceObject
     {
         public int diameter;
-        public int minerals;
+        public float minerals;
         public static int MAX_SIZE = 100;
         public static int MIN_SIZE = 25;
         public static int PER_SECTOR = 15;
@@ -277,6 +277,14 @@ namespace Expand
             return count;
         }
 
+        public void replenishMinerals()
+        {
+            if (this.minerals < this.diameter * 5)
+            {
+                this.minerals += 0.02F;
+            }
+        }
+
         public override void update()
         {
             if (Util.distance(Program.game.ship.pos[0], Program.game.ship.pos[1], this.center_point[0], this.center_point[1]) <= this.diameter / 2 + Asteroid.PADDING_DISTANCE)
@@ -289,6 +297,7 @@ namespace Expand
             {
                 this.harvestMinerals();
             }
+            this.replenishMinerals();
         }
     }
 }
