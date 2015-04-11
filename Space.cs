@@ -255,7 +255,12 @@ namespace Expand
         public override void draw()
         {
             float scale = diameter / 50f;
-            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale, layer: 0.1f);
+            Vector2 pos_vector = new Vector2(pos[0], pos[1]);
+            int green_level = (int)((float)this.minerals / (float)(this.diameter * 5) * 80);
+            Color asteroid_color = new Color(0, green_level + 47, 14);
+            Vector2 origin = new Vector2(0, 0);
+            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale, color: asteroid_color, layer: 0.1f);
+            //Program.game.spriteBatch.Draw(Program.game.space.asteroid_texture, pos_vector, null, Color.Green, 0F, origin, scale, SpriteEffects.None, 0.1f);
         }
 
         public int harvestMinerals(int count = 1)
@@ -263,6 +268,7 @@ namespace Expand
             if (this.minerals > 0)
             {
                 this.minerals -= count;
+                Program.game.ship.minerals += count;
             }
             else
             {

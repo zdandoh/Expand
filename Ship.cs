@@ -14,6 +14,7 @@ namespace Expand
         public int[] pos = {Program.game.screen_size[0] / 2, Program.game.screen_size[1] / 2};
         public int[] draw_location;
         public int tool_selected = 1;
+        public int minerals = 0;
         public int[] tool_end = { -1, -1 };
         private float radians = 0;
         private bool preserve_rotation = false;

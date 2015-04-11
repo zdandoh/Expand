@@ -83,6 +83,9 @@
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\font\freesansbold.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

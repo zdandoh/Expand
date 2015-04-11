@@ -83,6 +83,8 @@ namespace Expand
                 Program.game.spriteBatch.Draw(hotbar, pos_vector, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0.99f);
                 Program.game.spriteBatch.Draw(hotbar_selector, selector_pos, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
             }
+            int[] text_pos = { 10, 10 };
+            Program.game.drawText(Program.game.ship.minerals.ToString(), text_pos, Color.White);
         }
     }
 }

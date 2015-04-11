@@ -28,6 +28,7 @@ namespace Expand
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
+        public SpriteFont default_font;
 
         public Expand()
             : base()
@@ -56,6 +57,7 @@ namespace Expand
             spriteBatch = new SpriteBatch(GraphicsDevice);
             line_texture = new Texture2D(GraphicsDevice, 1, 1);
             line_texture.SetData<Color>(new Color[] { Color.White });
+            default_font = Content.Load<SpriteFont>("font//freesansbold");
             // TODO: use this.Content to load your game content here
         }
 
@@ -105,21 +107,34 @@ namespace Expand
             return new int[] {new_x, new_y};
         }
 
+        public Vector2 drawOffset(Vector2 initial_draw)
+        {
+            return new Vector2(initial_draw.X - Program.game.ship.pos[0] + Program.game.ship.draw_location[0], initial_draw.Y - Program.game.ship.pos[1] + Program.game.ship.draw_location[1]);
+        }
+
         public bool inView(int x, int y)
         {
             // Check if sprite is in player view
             return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000;
         }
 
-        public void drawSprite(Texture2D texture, int x, int y, float scale = 1, float layer = 1)
+        public void drawSprite(Texture2D texture, int x, int y, float scale = 1, float layer = 1, Color? color = null)
         {
             if (this.inView(x, y))
             {
+
+                Color draw_color = color ?? Color.White;
                 int[] draw_pos = this.drawOffset(x, y);
                 Vector2 pos_vector = new Vector2(draw_pos[0], draw_pos[1]);
                 Vector2 origin = new Vector2(0, 0);
-                this.spriteBatch.Draw(texture, pos_vector, null, Color.White, 0F, origin, scale, SpriteEffects.None, layer);
+                this.spriteBatch.Draw(texture, pos_vector, null, draw_color, 0F, origin, scale, SpriteEffects.None, layer);
             }
+        }
+
+        public void drawText(String text, int[] pos, Color text_color)
+        {
+            Vector2 pos_vector = new Vector2(pos[0], pos[1]);
+            this.spriteBatch.DrawString(this.default_font, text, pos_vector, text_color);
         }
     }
 }
