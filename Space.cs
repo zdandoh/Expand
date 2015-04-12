@@ -14,9 +14,9 @@ namespace Expand
     public class Space: GameObject
     {
         public Color space_color;
-        public Texture2D star_texture1 = Program.game.loadTexture("space//star1.png");
-        public Texture2D star_texture2 = Program.game.loadTexture("space//star2.png");
-        public Texture2D asteroid_texture = Program.game.loadTexture("space//asteroid.png");
+        public Texture2D star_texture1 = Program.game.textures["space\\star1.png"];
+        public Texture2D star_texture2 = Program.game.textures["space\\star2.png"];
+        public Texture2D asteroid_texture = Program.game.textures["space\\asteroid.png"];
         public const int SECTOR_SIZE = 5000;
         public const bool CLEAR_SECTOR = true; // Resets the sector files at runtime if true
         private Sector[,] loaded_sectors;

@@ -11,11 +11,10 @@ namespace Expand
     public class Ship: GameObject
     {
         private Texture2D ship_texture;
+        public Tool tool;
         public int[] pos = {Program.game.screen_size[0] / 2, Program.game.screen_size[1] / 2};
         public int[] draw_location;
-        public int tool_selected = 1;
         public int minerals = 0;
-        public int[] tool_end = { -1, -1 };
         private float radians = 0;
         private bool preserve_rotation = false;
         private int y_velocity = 0;
@@ -27,10 +26,12 @@ namespace Expand
 
         public Ship()
         {
-            ship_texture = Program.game.loadTexture("ships//ship.png");
+            ship_texture = Program.game.textures["ships\\ship.png"];
+            tool = new Tool();
             this.pos[0] -= ship_texture.Width / 2;
             this.pos[1] -= ship_texture.Height / 2;
             this.draw_location = (int[]) this.pos.Clone();
+            Dialog d = new Dialog("lol");
         }
 
         public int moveCloserToZero(int number)
@@ -85,8 +86,8 @@ namespace Expand
 
                 if (added == (int) line_distance)
                 {
-                    this.tool_end[0] = int_point1_x;
-                    this.tool_end[1] = int_point1_y;
+                    this.tool.tool_line_end[0] = int_point1_x;
+                    this.tool.tool_line_end[1] = int_point1_y;
                     does_collide = true;
                 }
             }
@@ -153,34 +154,71 @@ namespace Expand
             }
         }
 
-        public void drawTool()
-        {
-            if (this.tool_selected == 1)
-            {
-                // Utility laser
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                {
-                    Program.game.drawLine(this.draw_location[0], this.draw_location[1], this.tool_end[0], this.tool_end[1], 2);
-                }
-            }
-        }
-
         public override void update()
         {
             this.updatePosition();
-            this.tool_end[0] = Mouse.GetState().Position.X;
-            this.tool_end[1] = Mouse.GetState().Position.Y;
         }
 
         public override void draw()
         {
-            // Draw tool
-            this.drawTool();
-
             // Draw ship
             Vector2 pos_vector = new Vector2(draw_location[0], draw_location[1]);
             Vector2 origin = new Vector2(10, 10);
             Program.game.spriteBatch.Draw(ship_texture, pos_vector, null, Color.White, radians, origin, 1, SpriteEffects.None, 0.9f);
+        }
+    }
+
+    public class Tool: GameObject
+    {
+        private int tool_number;
+        public int[] tool_line_end = new int[2];
+        public Tool()
+        {
+            tool_line_end[0] = -1;
+            tool_line_end[1] = -1;
+            this.tool_number = 1;
+        }
+
+        public void setTool(int tool_no)
+        {
+            if (tool_no > 6)
+            {
+                this.tool_number = 6;
+            }
+            else if (tool_no < 1)
+            {
+                this.tool_number = 1;
+            }
+            else
+            {
+                this.tool_number = tool_no;
+            }
+        }
+
+        public int getTool()
+        {
+            return this.tool_number;
+        }
+
+        public override void update()
+        {
+            if (this.tool_number == 1)
+            {
+                this.tool_line_end[0] = Mouse.GetState().Position.X;
+                this.tool_line_end[1] = Mouse.GetState().Position.Y;
+            }
+        }
+
+        public override void draw()
+        {
+            if (this.tool_number == 1)
+            {
+                // Utility laser
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                {
+                    Program.game.drawLine(Program.game.ship.draw_location[0], Program.game.ship.draw_location[1], this.tool_line_end[0], this.tool_line_end[1], 2);
+                }
+            }
         }
     }
 }

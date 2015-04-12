@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
 #endregion
 
 namespace Expand
@@ -27,6 +28,7 @@ namespace Expand
         public Texture2D line_texture;
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
+        public Dictionary<String, Texture2D> textures;
         public SpriteBatch spriteBatch;
         public SpriteFont default_font;
 
@@ -42,6 +44,7 @@ namespace Expand
 
         protected override void Initialize()
         {
+            this.textures = loadAllContent();
             this.IsMouseVisible = true;
             game_time.Start();
             object_handler = new ObjectHandler();
@@ -53,12 +56,24 @@ namespace Expand
 
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             line_texture = new Texture2D(GraphicsDevice, 1, 1);
             line_texture.SetData<Color>(new Color[] { Color.White });
             default_font = Content.Load<SpriteFont>("font//freesansbold");
-            // TODO: use this.Content to load your game content here
+        }
+
+        public Dictionary<String, Texture2D> loadAllContent()
+        {
+            Dictionary<String, Texture2D> texture_dict = new Dictionary<String, Texture2D>();
+            IEnumerable<String> files = Directory.EnumerateFiles("Content", "*.*", SearchOption.AllDirectories);
+            foreach(String file in files)
+            {
+                if(file.EndsWith(".png"))
+                {
+                    texture_dict.Add(file.Substring(8), this.loadTexture(file.Substring(8)));
+                }
+            }
+            return texture_dict;
         }
 
         protected override void UnloadContent()
@@ -131,10 +146,11 @@ namespace Expand
             }
         }
 
-        public void drawText(String text, int[] pos, Color text_color)
+        public void drawText(String text, int[] pos, Color text_color, float layer = 1F)
         {
             Vector2 pos_vector = new Vector2(pos[0], pos[1]);
-            this.spriteBatch.DrawString(this.default_font, text, pos_vector, text_color);
+            Vector2 origin = new Vector2(0, 0);
+            this.spriteBatch.DrawString(this.default_font, text, pos_vector, text_color, 0F, origin, 1F, SpriteEffects.None, layer);
         }
     }
 }
