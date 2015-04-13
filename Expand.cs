@@ -31,6 +31,8 @@ namespace Expand
         public Dictionary<String, Texture2D> textures;
         public SpriteBatch spriteBatch;
         public SpriteFont default_font;
+        public SpriteFont default_font16;
+        public MouseState mouse = Mouse.GetState();
 
         public Expand()
             : base()
@@ -59,7 +61,8 @@ namespace Expand
             spriteBatch = new SpriteBatch(GraphicsDevice);
             line_texture = new Texture2D(GraphicsDevice, 1, 1);
             line_texture.SetData<Color>(new Color[] { Color.White });
-            default_font = Content.Load<SpriteFont>("font//freesansbold");
+            default_font = Content.Load<SpriteFont>("font//space_font12");
+            default_font16 = Content.Load<SpriteFont>("font//space_font16");
         }
 
         public Dictionary<String, Texture2D> loadAllContent()
@@ -83,6 +86,7 @@ namespace Expand
 
         protected override void Update(GameTime gameTime)
         {
+            this.mouse = Mouse.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -146,11 +150,11 @@ namespace Expand
             }
         }
 
-        public void drawText(String text, int[] pos, Color text_color, float layer = 1F)
+        public void drawText(String text, int[] pos, Color text_color, float layer = 1F, float scale = 1F)
         {
             Vector2 pos_vector = new Vector2(pos[0], pos[1]);
             Vector2 origin = new Vector2(0, 0);
-            this.spriteBatch.DrawString(this.default_font, text, pos_vector, text_color, 0F, origin, 1F, SpriteEffects.None, layer);
+            this.spriteBatch.DrawString(this.default_font, text, pos_vector, text_color, 0F, origin, scale, SpriteEffects.None, layer);
         }
     }
 }

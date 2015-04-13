@@ -31,7 +31,7 @@ namespace Expand
             this.pos[0] -= ship_texture.Width / 2;
             this.pos[1] -= ship_texture.Height / 2;
             this.draw_location = (int[]) this.pos.Clone();
-            Dialog d = new Dialog("lol");
+            Dialog d = new Dialog("Hello, Captain. Welcome to the ship. Blast off! Wilkomen Kaptain zu die shippe! Blasten Sie ofnen!");
         }
 
         public int moveCloserToZero(int number)
