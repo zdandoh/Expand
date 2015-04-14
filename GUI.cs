@@ -78,8 +78,10 @@ namespace Expand
                 Program.game.spriteBatch.Draw(tool1_icon, new Vector2(pos_vector.X + 4, pos_vector.Y + 4), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
             }
 
-            int[] text_pos = { 10, 10 };
+            int[] text_pos = { 10, 5 };
+            int[] sector_text_pos = { 10, 20 };
             Program.game.drawText(Program.game.ship.minerals.ToString(), text_pos, Color.White);
+            Program.game.drawText(Program.game.space.getPlayerSector()[0] + ", " + Program.game.space.getPlayerSector()[1], sector_text_pos, Color.White);
         }
     }
 }
