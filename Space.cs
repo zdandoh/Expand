@@ -18,25 +18,36 @@ namespace Expand
         public Texture2D star_texture2 = Program.game.textures["space\\star2.png"];
         public Texture2D asteroid_texture = Program.game.textures["space\\asteroid.png"];
         public const int SECTOR_SIZE = 5000;
-        public const bool CLEAR_SECTOR = true; // Resets the sector files at runtime if true
+        public const bool CLEAR_SECTOR = false; // Resets the sector files at runtime if true
+        public bool first_load = true;
         private Sector[,] loaded_sectors;
         private int[] player_sector = {0, 0};
         public Space()
         {
+            player_sector = getPlayerSector();
             if (CLEAR_SECTOR)
             {
                 Space.clearSpace();
             }
             space_color = new Color(0, 0, 10);
             loaded_sectors = getAdjacentSectors();
-            this.player_sector[0] = -1;
-            this.player_sector[1] = -1;
+            this.player_sector[0] += -1;
+            this.player_sector[1] += -1;
         }
 
         public override void update()
         {
             if (!player_sector.SequenceEqual(getPlayerSector()))
             {
+                // Save the sector you were just in
+                if (this.first_load)
+                {
+                    this.first_load = false;
+                }
+                else
+                {
+                    this.loaded_sectors[1, 1].saveAsync();
+                }
                 player_sector = (int[]) getPlayerSector().Clone();
                 Console.WriteLine("Now in sector " + player_sector[0] + " " + player_sector[1] + " LOADING ADJACENTS!");
                 ThreadStart thread_target = new ThreadStart(loadAdjacentSectors);
@@ -51,10 +62,13 @@ namespace Expand
         private static void clearSpace()
         {
             // Deletes all saved sector files
-            DirectoryInfo space_dir = new DirectoryInfo("space");
+            DirectoryInfo space_dir = new DirectoryInfo("Content//space//sectors");
             foreach (FileInfo sector_file in space_dir.GetFiles())
             {
-                sector_file.Delete();
+                if (sector_file.Name.EndsWith(".json"))
+                {
+                    sector_file.Delete();
+                }
             }
         }
 

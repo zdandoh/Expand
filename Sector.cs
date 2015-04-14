@@ -40,7 +40,7 @@ namespace Expand
                 Asteroid new_asteroid = new Asteroid(asteroid_coords[0], asteroid_coords[1]);
                 this.asteroids.Add(new_asteroid);
             }
-            this.save();
+            this.saveAsync();
             this.is_loaded = true;
             Console.WriteLine("Generated " + sector_name);
         }
@@ -90,10 +90,17 @@ namespace Expand
             json_fi.Close();
         }
 
+        public void saveAsync()
+        {
+            ThreadStart thread_target = new ThreadStart(this.save);
+            Thread save_thread = new Thread(thread_target);
+            save_thread.Start();
+        }
+
         public static String getSectorFileName(int x, int y)
         {
             String sector_name = "sector" + x + "." + y;
-            return "space//" + sector_name + ".json";
+            return "Content//space//sectors//" + sector_name + ".json";
         }
 
         public void reload()

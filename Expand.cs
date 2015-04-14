@@ -33,6 +33,7 @@ namespace Expand
         public SpriteFont default_font;
         public SpriteFont default_font16;
         public MouseState mouse = Mouse.GetState();
+        public Effect test_shader;
 
         public Expand()
             : base()
@@ -50,7 +51,7 @@ namespace Expand
             this.IsMouseVisible = true;
             game_time.Start();
             object_handler = new ObjectHandler();
-            ship = new Ship();
+            ship = Ship.load();
             space = new Space();
             gui = new GUI();
             base.Initialize();
@@ -137,11 +138,16 @@ namespace Expand
             return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000;
         }
 
+        protected override void OnExiting(Object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+            this.ship.save();
+        }
+
         public void drawSprite(Texture2D texture, int x, int y, float scale = 1, float layer = 1, Color? color = null)
         {
             if (this.inView(x, y))
             {
-
                 Color draw_color = color ?? Color.White;
                 int[] draw_pos = this.drawOffset(x, y);
                 Vector2 pos_vector = new Vector2(draw_pos[0], draw_pos[1]);

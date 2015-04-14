@@ -47,3 +47,5 @@ Temporary Items
 obj
 bin
 *.suo
+publish
+*.user

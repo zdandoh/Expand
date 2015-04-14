@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -31,7 +32,6 @@ namespace Expand
             this.pos[0] -= ship_texture.Width / 2;
             this.pos[1] -= ship_texture.Height / 2;
             this.draw_location = (int[]) this.pos.Clone();
-            Dialog d = new Dialog("Hello, Captain. Welcome to the ship. Blast off! Wilkomen Kaptain zu die shippe! Blasten Sie ofnen!");
         }
 
         public int moveCloserToZero(int number)
@@ -92,6 +92,29 @@ namespace Expand
                 }
             }
             return does_collide;
+        }
+
+        public void save()
+        {
+            String json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            System.IO.StreamWriter json_fi = new System.IO.StreamWriter("Content//ships//ship_data.json");
+            json_fi.Write(json);
+            json_fi.Close();
+        }
+
+        public static Ship load()
+        {
+            Ship loaded_ship;
+            if (File.Exists("Content//ships//ship_data.json"))
+            {
+                String ship_data = File.ReadAllText("Content//ships//ship_data.json");
+                loaded_ship = (Ship)Newtonsoft.Json.JsonConvert.DeserializeObject<Ship>(ship_data);
+            }
+            else
+            {
+                loaded_ship = new Ship();
+            }
+            return loaded_ship;
         }
 
         public void updatePosition()
