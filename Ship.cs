@@ -13,7 +13,6 @@ namespace Expand
     {
         private Texture2D ship_texture;
         public Tool tool;
-        public int[] pos = {Program.game.screen_size[0] / 2, Program.game.screen_size[1] / 2};
         public int[] draw_location;
         public int minerals = 0;
         private float radians = 0;
@@ -27,6 +26,8 @@ namespace Expand
 
         public Ship()
         {
+            pos[0] = Program.game.screen_size[0] / 2;
+            pos[1] = Program.game.screen_size[1] / 2;
             ship_texture = Program.game.textures["ships\\ship.png"];
             tool = new Tool();
             this.pos[0] -= ship_texture.Width / 2;
@@ -230,6 +231,18 @@ namespace Expand
                 this.tool_line_end[0] = Mouse.GetState().Position.X;
                 this.tool_line_end[1] = Mouse.GetState().Position.Y;
             }
+            else if (this.tool_number == 2)
+            {
+                if (Program.game.mouse.LeftButton == ButtonState.Pressed)
+                {
+                    Texture2D base_tex = Program.game.textures["structure\\base.png"];
+                    int[] real_pos = { Program.game.ship.pos[0] + Program.game.mouse.X - Program.game.ship.draw_location[0] - base_tex.Width/2, Program.game.ship.pos[1] + Program.game.mouse.Y - Program.game.ship.draw_location[1] - base_tex.Height/2};
+
+                    int[] builder_sector_pos = Space.getSector(real_pos[0], real_pos[1]);
+                    Sector builder_sector = Program.game.space.findSector(builder_sector_pos[0], builder_sector_pos[1]);
+                    Builder new_build = new Builder(builder_sector, real_pos[0], real_pos[1]);
+                }
+            }
         }
 
         public override void draw()
@@ -237,9 +250,16 @@ namespace Expand
             if (this.tool_number == 1)
             {
                 // Utility laser
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                if (Program.game.mouse.LeftButton == ButtonState.Pressed)
                 {
                     Program.game.drawLine(Program.game.ship.draw_location[0], Program.game.ship.draw_location[1], this.tool_line_end[0], this.tool_line_end[1], 2);
+                }
+            }
+            if (this.tool_number == 2)
+            {
+                if (Program.game.mouse.LeftButton == ButtonState.Pressed)
+                {
+
                 }
             }
         }

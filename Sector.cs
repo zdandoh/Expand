@@ -11,8 +11,9 @@ namespace Expand
 {
     public class Sector
     {
-        public List<Star> stars = new List<Star>();
-        public List<Asteroid> asteroids = new List<Asteroid>();
+        public List<SpaceObject> space_objects = new List<SpaceObject>();
+        //public List<Star> stars = new List<Star>();
+        //public List<Asteroid> asteroids = new List<Asteroid>();
         public String sector_name;
         public String sector_file_location;
         public const int SECTOR_SIZE = Space.SECTOR_SIZE;
@@ -31,14 +32,12 @@ namespace Expand
             for (int counter = 0; counter < Star.PER_SECTOR; counter++)
             {
                 int[] star_coords = getNewObjectPos(Star.MAX_SIZE);
-                Star new_star = new Star(star_coords[0], star_coords[1]);
-                this.stars.Add(new_star);
+                Star new_star = new Star(this, star_coords[0], star_coords[1]);
             }
             for (int asteroid_counter = 0; asteroid_counter < Asteroid.PER_SECTOR; asteroid_counter++)
             {
                 int[] asteroid_coords = getNewObjectPos(Asteroid.MAX_SIZE);
-                Asteroid new_asteroid = new Asteroid(asteroid_coords[0], asteroid_coords[1]);
-                this.asteroids.Add(new_asteroid);
+                Asteroid new_asteroid = new Asteroid(this, asteroid_coords[0], asteroid_coords[1]);
             }
             this.saveAsync();
             this.is_loaded = true;
@@ -71,11 +70,7 @@ namespace Expand
 
         public void unload()
         {
-            foreach (SpaceObject space_object in stars)
-            {
-                space_object.setDead();
-            }
-            foreach (SpaceObject space_object in asteroids)
+            foreach (SpaceObject space_object in this.space_objects)
             {
                 space_object.setDead();
             }
@@ -84,7 +79,8 @@ namespace Expand
 
         public void save()
         {
-            String json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+            String json = Newtonsoft.Json.JsonConvert.SerializeObject(this, settings);
             System.IO.StreamWriter json_fi = new System.IO.StreamWriter(sector_file_location);
             json_fi.Write(json);
             json_fi.Close();
@@ -106,7 +102,7 @@ namespace Expand
         public void reload()
         {
             // Loads all space objects into the game again
-            foreach (SpaceObject space_object in this.stars)
+            foreach (SpaceObject space_object in this.space_objects)
             {
                 Program.game.object_handler.addObject(space_object);
             }
@@ -116,8 +112,8 @@ namespace Expand
         {
             // Loads all the sector data from a file into this sector
             String sector_file = File.ReadAllText(getSectorFileName(x, y));
-            //JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
-            Sector loaded_sector = (Sector) Newtonsoft.Json.JsonConvert.DeserializeObject<Sector>(sector_file);
+            JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+            Sector loaded_sector = (Sector) Newtonsoft.Json.JsonConvert.DeserializeObject<Sector>(sector_file, settings);
             return loaded_sector;
         }
     }
