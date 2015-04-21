@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using C3.XNA;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.IO;
@@ -102,6 +101,25 @@ namespace Expand
                 return_sector.generate();
             }
             return return_sector;
+        }
+
+        public bool canPlace(SpaceObject item_to_place)
+        {
+            bool can_place = true;
+            int[] sector_coords = getSector(item_to_place.pos[0], item_to_place.pos[1]);
+            Sector place_sector = findSector(sector_coords[0], sector_coords[1]);
+            foreach (dynamic sector_item in place_sector.space_objects)
+            {
+                if (item_to_place.collidesWith(sector_item.getCollideShape()) && !item_to_place.pos.Equals(sector_item.pos))
+                {
+                    can_place = false;
+                }
+            }
+            if (can_place == true)
+            {
+                Console.WriteLine("I LET ONE SLIDE");
+            }
+            return can_place;
         }
 
         public bool sectorStillAdjacent(Sector old_sector, Sector[,] adjacent_sectors){
@@ -230,6 +248,21 @@ namespace Expand
             this.addToSector(sector_inside);
         }
 
+        public bool getCollideShape()
+        {
+            return false;
+        }
+
+        public override bool collidesWith(Circle circ)
+        {
+            return false;
+        }
+
+        public override bool collidesWith(Rectangle rect)
+        {
+            return false;
+        }
+
         public override void draw()
         {
             Program.game.drawSprite(this.getTexture(texture_number), pos[0], pos[1], layer: 0f);
@@ -269,6 +302,21 @@ namespace Expand
             this.center_point[0] = this.pos[0] + this.diameter / 2;
             this.center_point[1] = this.pos[1] + this.diameter / 2;
             this.addToSector(sector_inside);
+        }
+
+        public Circle getCollideShape()
+        {
+            return new Circle(pos[0], pos[1], this.diameter / 2);
+        }
+
+        public override bool collidesWith(Circle circ)
+        {
+            return Collider.intersects(this.getCollideShape(), circ);
+        }
+
+        public override bool collidesWith(Rectangle rect)
+        {
+            return Collider.intersects(this.getCollideShape(), rect);
         }
 
         public override void draw()

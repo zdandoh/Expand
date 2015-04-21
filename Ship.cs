@@ -118,6 +118,16 @@ namespace Expand
             return loaded_ship;
         }
 
+        public bool removeMinerals(int count)
+        {
+            if (this.minerals >= count)
+            {
+                this.minerals -= count;
+                return true;
+            }
+            return false;
+        }
+
         public void updatePosition()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W) && Program.game.game_time.ElapsedMilliseconds - y_velocity_change > VELOCITY_COOLDOWN)
@@ -235,12 +245,18 @@ namespace Expand
             {
                 if (Program.game.mouse.LeftButton == ButtonState.Pressed)
                 {
+                    // Try to place a new core
                     Texture2D base_tex = Program.game.textures["structure\\base.png"];
-                    int[] real_pos = { Program.game.ship.pos[0] + Program.game.mouse.X - Program.game.ship.draw_location[0] - base_tex.Width/2, Program.game.ship.pos[1] + Program.game.mouse.Y - Program.game.ship.draw_location[1] - base_tex.Height/2};
-
+                    int[] real_pos = Util.screenPosToSpacePos(Program.game.mouse.X - base_tex.Width / 2, Program.game.mouse.Y - base_tex.Width / 2);
                     int[] builder_sector_pos = Space.getSector(real_pos[0], real_pos[1]);
                     Sector builder_sector = Program.game.space.findSector(builder_sector_pos[0], builder_sector_pos[1]);
                     Builder new_build = new Builder(builder_sector, real_pos[0], real_pos[1]);
+                    if (!Program.game.space.canPlace(new_build) || !Program.game.ship.removeMinerals(1))
+                    {
+                        new_build.setDead();
+                        new_build.removeFromSector();
+                        Console.WriteLine("SET DEAD");
+                    }
                 }
             }
         }

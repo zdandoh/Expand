@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,16 +31,17 @@ namespace Expand
 
         }
 
-        public void setDead()
+        public virtual void setDead()
         {
             this.alive = false;
         }
     }
 
-    public class SpaceObject: GameObject
+    public abstract class SpaceObject: GameObject
     {
         // Anything that should be saved in a sector file is a space object
         bool space_object = true;
+        private Object collide_object;
 
         public void addToSector(Sector sector_inside)
         {
@@ -49,9 +51,27 @@ namespace Expand
             }
         }
 
-        public virtual void onCollide(GameObject collider)
+        public override void setDead()
         {
-
+            this.alive = false;
         }
+
+        public void removeFromSector()
+        {
+            getContainingSector().space_objects.Remove(this);
+        }
+
+        public Sector getContainingSector()
+        {
+            int[] sector_coords = Space.getSector(pos[0], pos[1]);
+            return Program.game.space.findSector(sector_coords[0], sector_coords[1]);
+        }
+
+        public virtual bool collidesWith(bool is_a_star)
+        {
+            return false;
+        }
+        public abstract bool collidesWith(Circle circ);
+        public abstract bool collidesWith(Rectangle rect);
     }
 }
