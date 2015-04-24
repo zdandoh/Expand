@@ -41,7 +41,7 @@ namespace Expand
     {
         // Anything that should be saved in a sector file is a space object
         bool space_object = true;
-        private Object collide_object;
+        protected Object collide_object;
 
         public void addToSector(Sector sector_inside)
         {
@@ -67,11 +67,6 @@ namespace Expand
             return Program.game.space.findSector(sector_coords[0], sector_coords[1]);
         }
 
-        public virtual bool collidesWith(bool is_a_star)
-        {
-            return false;
-        }
-        public abstract bool collidesWith(Circle circ);
-        public abstract bool collidesWith(Rectangle rect);
+        public abstract Object getCollideShape();
     }
 }

@@ -46,11 +46,14 @@ namespace Expand
 
         public void drawObjects()
         {
+            int count = 0;
             Program.game.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             foreach (GameObject obj in game_objects)
             {
                 obj.draw();
+                count++;
             }
+            Console.WriteLine(count);
             Program.game.spriteBatch.End();
         }
     }

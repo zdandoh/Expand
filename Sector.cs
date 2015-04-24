@@ -39,7 +39,7 @@ namespace Expand
                 int[] asteroid_coords = getNewObjectPos(Asteroid.MAX_SIZE);
                 Asteroid new_asteroid = new Asteroid(this, asteroid_coords[0], asteroid_coords[1]);
             }
-            this.saveAsync();
+            this.save();
             this.is_loaded = true;
             Console.WriteLine("Generated " + sector_name);
         }
@@ -70,10 +70,13 @@ namespace Expand
 
         public void unload()
         {
+            int count = 0;
             foreach (SpaceObject space_object in this.space_objects)
             {
                 space_object.setDead();
+                count++;
             }
+            Console.WriteLine("UNLOADED: " + count);
             this.is_loaded = false;
         }
 

@@ -17,8 +17,8 @@ namespace Expand
         public Texture2D star_texture2 = Program.game.textures["space\\star2.png"];
         public Texture2D asteroid_texture = Program.game.textures["space\\asteroid.png"];
         public const int SECTOR_SIZE = 5000;
-        public const bool CLEAR_SECTOR = false; // Resets the sector files at runtime if true
-        public bool first_load = true;
+        public const bool CLEAR_SECTOR = true; // Resets the sector files at runtime if true
+        public bool first_load = false;
         private Sector[,] loaded_sectors;
         private int[] player_sector = {0, 0};
         public Space()
@@ -45,7 +45,7 @@ namespace Expand
                 }
                 else
                 {
-                    this.loaded_sectors[1, 1].saveAsync();
+                    this.loaded_sectors[1, 1].save();
                 }
                 player_sector = (int[])getSector(Program.game.ship.pos[0], Program.game.ship.pos[1]).Clone();
                 Console.WriteLine("Now in sector " + player_sector[0] + " " + player_sector[1] + " LOADING ADJACENTS!");
@@ -103,21 +103,18 @@ namespace Expand
             return return_sector;
         }
 
-        public bool canPlace(SpaceObject item_to_place)
+        public bool canPlace(dynamic item_to_place)
         {
             bool can_place = true;
             int[] sector_coords = getSector(item_to_place.pos[0], item_to_place.pos[1]);
             Sector place_sector = findSector(sector_coords[0], sector_coords[1]);
             foreach (dynamic sector_item in place_sector.space_objects)
             {
-                if (item_to_place.collidesWith(sector_item.getCollideShape()) && !item_to_place.pos.Equals(sector_item.pos))
+                if (Collider.intersects(item_to_place.getCollideShape(), sector_item.getCollideShape()) && !item_to_place.pos.Equals(sector_item.pos))
                 {
                     can_place = false;
+                    break;
                 }
-            }
-            if (can_place == true)
-            {
-                Console.WriteLine("I LET ONE SLIDE");
             }
             return can_place;
         }
@@ -248,17 +245,7 @@ namespace Expand
             this.addToSector(sector_inside);
         }
 
-        public bool getCollideShape()
-        {
-            return false;
-        }
-
-        public override bool collidesWith(Circle circ)
-        {
-            return false;
-        }
-
-        public override bool collidesWith(Rectangle rect)
+        public override Object getCollideShape()
         {
             return false;
         }
@@ -304,19 +291,9 @@ namespace Expand
             this.addToSector(sector_inside);
         }
 
-        public Circle getCollideShape()
+        public override Object getCollideShape()
         {
             return new Circle(pos[0], pos[1], this.diameter / 2);
-        }
-
-        public override bool collidesWith(Circle circ)
-        {
-            return Collider.intersects(this.getCollideShape(), circ);
-        }
-
-        public override bool collidesWith(Rectangle rect)
-        {
-            return Collider.intersects(this.getCollideShape(), rect);
         }
 
         public override void draw()
