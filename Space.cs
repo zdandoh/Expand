@@ -17,8 +17,8 @@ namespace Expand
         public Texture2D star_texture2 = Program.game.textures["space\\star2.png"];
         public Texture2D asteroid_texture = Program.game.textures["space\\asteroid.png"];
         public const int SECTOR_SIZE = 5000;
-        public const bool CLEAR_SECTOR = true; // Resets the sector files at runtime if true
-        public bool first_load = false;
+        public const bool CLEAR_SECTOR = false; // Resets the sector files at runtime if true
+        public bool first_load = true; // DO NOT CHANGE THIS UNLESS YOU MEAN IT
         private Sector[,] loaded_sectors;
         private int[] player_sector = {0, 0};
         public Space()
@@ -71,11 +71,16 @@ namespace Expand
             }
         }
 
-        public Sector findSector(int x, int y)
+        public Sector findLoadedSector(int x, int y)
+        {
+            // Won't load a sector from disk, only memory
+            return findSector(x, y, load: false);
+        }
+
+        public Sector findSector(int x, int y, bool load = true)
         {
             // Checks if sector is loaded, generates new sector, or loads from file
             Sector return_sector;
-
             // Check if sector already is loaded
             foreach (Sector loaded_sector in loaded_sectors)
             {
@@ -90,15 +95,19 @@ namespace Expand
                 }
             }
 
-            if (Sector.exists(x, y))
+            if (Sector.exists(x, y) && load)
             {
                 Sector saved_sector = Sector.load(x, y);
                 return saved_sector;
             }
-            else
+            else if(load)
             {
                 return_sector = new Sector(x, y);
                 return_sector.generate();
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Sector not loaded");
             }
             return return_sector;
         }
@@ -107,7 +116,7 @@ namespace Expand
         {
             bool can_place = true;
             int[] sector_coords = getSector(item_to_place.pos[0], item_to_place.pos[1]);
-            Sector place_sector = findSector(sector_coords[0], sector_coords[1]);
+            Sector place_sector = findLoadedSector(sector_coords[0], sector_coords[1]);
             foreach (dynamic sector_item in place_sector.space_objects)
             {
                 if (Collider.intersects(item_to_place.getCollideShape(), sector_item.getCollideShape()) && !item_to_place.pos.Equals(sector_item.pos))
@@ -148,6 +157,7 @@ namespace Expand
                         // Sector needs to be unloaded
                         Console.WriteLine("UNLOADING SECTOR " + loaded_sectors[sector_row, sector_x].formatName());
                         loaded_sectors[sector_row, sector_x].unload();
+                        loaded_sectors[sector_row, sector_x].space_objects = null;
                         loaded_sectors[sector_row, sector_x] = null;
                     }
                 }
@@ -159,7 +169,9 @@ namespace Expand
                 for (int sector_x = 0; sector_x < adjacent_sectors.GetLength(1); sector_x++)
                 {
                     int[] sector_coords = adjacent_sectors[sector_row, sector_x].coords;
-                    adjacent_sectors[sector_row, sector_x] = findSector(sector_coords[0], sector_coords[1]);
+                    Sector next_sector = findSector(sector_coords[0], sector_coords[1]);
+                    adjacent_sectors[sector_row, sector_x] = next_sector;
+                    int middle_list_quity = Program.game.object_handler.middle_list.Count();
                 }
             }
             loaded_sectors = adjacent_sectors;

@@ -249,12 +249,11 @@ namespace Expand
                     Texture2D base_tex = Program.game.textures["structure\\base.png"];
                     int[] real_pos = Util.screenPosToSpacePos(Program.game.mouse.X - base_tex.Width / 2, Program.game.mouse.Y - base_tex.Width / 2);
                     int[] builder_sector_pos = Space.getSector(real_pos[0], real_pos[1]);
-                    Sector builder_sector = Program.game.space.findSector(builder_sector_pos[0], builder_sector_pos[1]);
+                    Sector builder_sector = Program.game.space.findLoadedSector(builder_sector_pos[0], builder_sector_pos[1]);
                     Builder new_build = new Builder(builder_sector, real_pos[0], real_pos[1]);
                     if (Program.game.space.canPlace(new_build) && Program.game.ship.removeMinerals(1))
                     {
                         new_build.addToSector(new_build.getContainingSector());
-                        Console.WriteLine("ADDED A NEW ONE");
                     }
                 }
             }

@@ -11,7 +11,7 @@ namespace Expand
     public class ObjectHandler
     {
         List<GameObject> game_objects = new List<GameObject>();
-        List<GameObject> middle_list = new List<GameObject>();
+        public List<GameObject> middle_list = new List<GameObject>();
         List<Texture2D> texture_queue = new List<Texture2D>();
         public bool middle_list_locked = false;
 
@@ -25,6 +25,10 @@ namespace Expand
             // Move from middle list to real list
             if (!middle_list_locked)
             {
+                if (middle_list.Count() > 0)
+                {
+                    ;
+                }
                 for(int middle_counter = 0; middle_counter < middle_list.Count(); middle_counter++)
                 {
                     game_objects.Add(middle_list[middle_counter]);
@@ -46,14 +50,11 @@ namespace Expand
 
         public void drawObjects()
         {
-            int count = 0;
             Program.game.spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             foreach (GameObject obj in game_objects)
             {
                 obj.draw();
-                count++;
             }
-            Console.WriteLine(count);
             Program.game.spriteBatch.End();
         }
     }

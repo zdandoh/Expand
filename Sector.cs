@@ -17,10 +17,11 @@ namespace Expand
         public String sector_name;
         public String sector_file_location;
         public const int SECTOR_SIZE = Space.SECTOR_SIZE;
-        public bool is_loaded = false;
+        public bool is_loaded;
         public int[] coords = new int[2];
         public Sector(int x, int y)
         {
+            this.is_loaded = false;
             sector_name = "sector" + x + "." + y;
             sector_file_location = getSectorFileName(x, y);
             coords[0] = x;
@@ -117,6 +118,7 @@ namespace Expand
             String sector_file = File.ReadAllText(getSectorFileName(x, y));
             JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
             Sector loaded_sector = (Sector) Newtonsoft.Json.JsonConvert.DeserializeObject<Sector>(sector_file, settings);
+            loaded_sector.is_loaded = true;
             return loaded_sector;
         }
     }

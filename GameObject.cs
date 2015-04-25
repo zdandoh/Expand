@@ -64,7 +64,7 @@ namespace Expand
         public Sector getContainingSector()
         {
             int[] sector_coords = Space.getSector(pos[0], pos[1]);
-            return Program.game.space.findSector(sector_coords[0], sector_coords[1]);
+            return Program.game.space.findLoadedSector(sector_coords[0], sector_coords[1]);
         }
 
         public abstract Object getCollideShape();
