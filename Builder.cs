@@ -43,7 +43,7 @@ namespace Expand
 
         public override void draw()
         {
-            Program.game.drawSprite(Program.game.textures["structure\\base.png"], pos[0], pos[1], layer: 0.1f);
+            Program.game.drawSprite(Program.game.textures["structure\\base.png"], pos[0], pos[1], layer: 0.1f, color: Color.Gold);
             if (gui_shown)
             {
                 //drawSelectorAround(this.pos);

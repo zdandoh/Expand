@@ -108,15 +108,16 @@ namespace Expand
             return this.Content.Load<Texture2D>(file_path);
         }
 
-        public void drawLine(int x1, int y1, int x2, int y2, int thickness = 1)
+        public void drawLine(int x1, int y1, int x2, int y2, int thickness = 1, Color? color = null)
         {
+            Color draw_color = color ?? Color.White;
             Vector2 start = new Vector2(x1, y1);
             Vector2 end = new Vector2(x2, y2);
             Vector2 along_line = end - start;
             float line_angle = (float) Math.Atan2(along_line.Y, along_line.X);
             Rectangle line_rect = new Rectangle((int)start.X, (int)start.Y, (int)along_line.Length(), thickness);
             Vector2 origin = new Vector2(0, 0);
-            this.spriteBatch.Draw(this.line_texture, line_rect, null, Color.Blue, line_angle, origin, SpriteEffects.None, 0);
+            this.spriteBatch.Draw(this.line_texture, line_rect, null, draw_color, line_angle, origin, SpriteEffects.None, 0);
         }
 
         public int[] drawOffset(int x, int y)

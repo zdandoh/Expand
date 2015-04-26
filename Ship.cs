@@ -266,7 +266,9 @@ namespace Expand
                 // Utility laser
                 if (Program.game.mouse.LeftButton == ButtonState.Pressed)
                 {
-                    Program.game.drawLine(Program.game.ship.draw_location[0], Program.game.ship.draw_location[1], this.tool_line_end[0], this.tool_line_end[1], 2);
+                    Program.game.drawLine(Program.game.ship.draw_location[0], Program.game.ship.draw_location[1], this.tool_line_end[0], this.tool_line_end[1], 2, color: Color.Blue);
+                    Program.game.drawLine(Program.game.ship.draw_location[0] + 1, Program.game.ship.draw_location[1] + 1, this.tool_line_end[0], this.tool_line_end[1], 2, color: Color.Blue);
+                    Program.game.drawLine(Program.game.ship.draw_location[0] - 1, Program.game.ship.draw_location[1] - 1, this.tool_line_end[0], this.tool_line_end[1], 2, color: Color.Blue);
                 }
             }
             if (this.tool_number == 2)
