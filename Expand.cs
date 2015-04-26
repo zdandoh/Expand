@@ -143,7 +143,7 @@ namespace Expand
             base.OnExiting(sender, args);
             this.ship.save();
             int[] sector_location = this.space.getPlayerSector();
-            this.space.findSector(sector_location[0], sector_location[1]).save();
+            this.space.findSector(sector_location[0], sector_location[1]).saveAsync();
         }
 
         public void drawSprite(Texture2D texture, int x, int y, float scale = 1, float layer = 1, Color? color = null)

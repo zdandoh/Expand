@@ -45,10 +45,9 @@ namespace Expand
                 }
                 else
                 {
-                    this.loaded_sectors[1, 1].save();
+                    this.loaded_sectors[1, 1].saveAsync();
                 }
                 player_sector = (int[])getSector(Program.game.ship.pos[0], Program.game.ship.pos[1]).Clone();
-                Console.WriteLine("Now in sector " + player_sector[0] + " " + player_sector[1] + " LOADING ADJACENTS!");
                 ThreadStart thread_target = new ThreadStart(loadAdjacentSectors);
                 Thread sector_loader = new Thread(thread_target);
                 sector_loader.IsBackground = true;
@@ -155,7 +154,6 @@ namespace Expand
                     if (!this.sectorStillAdjacent(loaded_sectors[sector_row, sector_x], adjacent_sectors))
                     {
                         // Sector needs to be unloaded
-                        Console.WriteLine("UNLOADING SECTOR " + loaded_sectors[sector_row, sector_x].formatName());
                         loaded_sectors[sector_row, sector_x].unload();
                         loaded_sectors[sector_row, sector_x].space_objects = null;
                         loaded_sectors[sector_row, sector_x] = null;
