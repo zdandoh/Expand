@@ -251,9 +251,13 @@ namespace Expand
                     int[] builder_sector_pos = Space.getSector(real_pos[0], real_pos[1]);
                     Sector builder_sector = Program.game.space.findLoadedSector(builder_sector_pos[0], builder_sector_pos[1]);
                     Builder new_build = new Builder(builder_sector, real_pos[0], real_pos[1]);
-                    if (Program.game.space.canPlace(new_build) && Program.game.ship.removeMinerals(1))
+                    if (Program.game.space.canPlace(new_build) && Program.game.ship.removeMinerals(BuildCosts.BASE))
                     {
                         new_build.addToSector(new_build.getContainingSector());
+                    }
+                    else
+                    {
+                        new_build.setDead();
                     }
                 }
             }

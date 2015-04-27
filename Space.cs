@@ -133,7 +133,11 @@ namespace Expand
             {
                 for (int sector_x = 0; sector_x < adjacent_sectors.GetLength(1); sector_x++)
                 {
-                    if (old_sector.coords.SequenceEqual(adjacent_sectors[sector_row, sector_x].coords))
+                    if (old_sector == null)
+                    {
+                        still_adjacent = false;
+                    }
+                    else if (old_sector.coords.SequenceEqual(adjacent_sectors[sector_row, sector_x].coords))
                     {
                         still_adjacent = true;
                     }

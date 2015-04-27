@@ -68,7 +68,7 @@ namespace Expand
         {
             bool collides = false;
             int distance = (int)Util.distance(circle1.x, circle1.y, circle2.x, circle2.y);
-            if (distance < circle1.r || distance < circle2.r)
+            if (distance < circle1.r*2 + 1 || distance < circle2.r*2 + 1)
             {
                 collides = true;
             }
@@ -122,6 +122,11 @@ namespace Expand
             return false;
         }
 
+        public int getDistance(int x, int y)
+        {
+            return (int)Util.distance(this.x + this.r, this.y + this.r, x, y);
+        }
+
         public double getArea()
         {
             return Math.PI * Math.Pow(this.r, 2);
@@ -139,5 +144,10 @@ namespace Expand
         public static int CIRCLE = 1;
         public static int RECT = 2;
         public static int ABSTRACT = 3;
+    }
+
+    public struct BuildCosts
+    {
+        public static int BASE = 100;
     }
 }

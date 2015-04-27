@@ -28,6 +28,10 @@ namespace Expand
             {
                 gui_shown = false;
             }
+            if (this.bounds.getDistance(Program.game.ship.pos[0], Program.game.ship.pos[1]) < this.bounds.r + 5)
+            {
+                Program.game.ship.reverse();
+            }
         }
 
         public override Object getCollideShape()
