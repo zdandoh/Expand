@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace Expand
@@ -12,8 +9,6 @@ namespace Expand
     public class Sector
     {
         public List<SpaceObject> space_objects = new List<SpaceObject>();
-        //public List<Star> stars = new List<Star>();
-        //public List<Asteroid> asteroids = new List<Asteroid>();
         public String sector_name;
         public String sector_file_location;
         public const int SECTOR_SIZE = Space.SECTOR_SIZE;

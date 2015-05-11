@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace Expand
 {
@@ -25,7 +21,7 @@ namespace Expand
             // Move from middle list to real list
             if (!middle_list_locked)
             {
-                if (middle_list.Count() > 0)
+                if (middle_list.Any())
                 {
                     ;
                 }

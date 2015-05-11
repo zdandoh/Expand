@@ -11,7 +11,7 @@ namespace Expand
 {
     public class Ship: GameObject
     {
-        private Texture2D ship_texture;
+        private readonly Texture2D ship_texture;
         public Tool tool;
         public int[] draw_location;
         public int minerals = 0;
@@ -20,9 +20,9 @@ namespace Expand
         private int y_velocity = 0;
         private int x_velocity = 0;
         private double y_velocity_change = 0;
-        private double x_velocity_change = 0;
+        private double x_velocity_change;
         private double space_velocity_change = 0;
-        private int VELOCITY_COOLDOWN = 100;
+        private const int VELOCITY_COOLDOWN = 100;
 
         public Ship()
         {
@@ -98,7 +98,7 @@ namespace Expand
         public void save()
         {
             String json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
-            System.IO.StreamWriter json_fi = new System.IO.StreamWriter("Content//ships//ship_data.json");
+            StreamWriter json_fi = new StreamWriter("Content//ships//ship_data.json");
             json_fi.Write(json);
             json_fi.Close();
         }

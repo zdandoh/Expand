@@ -1,32 +1,43 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Input;
 
 namespace Expand
 {
     class Builder: SpaceObject
     {
         public Circle bounds;
+        public List<Selector> selectors = new List<Selector>(); 
         private bool gui_shown = false;
         public Builder(Sector sector_inside, int x, int y)
         {
             this.pos[0] = x;
             this.pos[1] = y;
-            bounds = new Circle(x, y, Program.game.textures["structure\\base.png"].Height / 2);
+            int r = Program.game.textures["structure\\base.png"].Height/2;
+            bounds = new Circle(x, y, r);
         }
 
         public override void update()
         {
-            if(bounds.Contains(new Point(pos[0], pos[1])))
+            Vector2 mouse_space_pos = Program.game.spacePos(Program.game.mouse.X - bounds.r, Program.game.mouse.Y - bounds.r);
+            if(bounds.Contains(new Point((int)mouse_space_pos.X, (int)mouse_space_pos.Y)) && Program.game.mouse.LeftButton == ButtonState.Pressed)
             {
                 gui_shown = true;
+                createSelectorsAround(this.pos);
             }
-            else
+            else if(Program.game.mouse.LeftButton == ButtonState.Pressed)
             {
                 gui_shown = false;
+                foreach(Selector select in selectors)
+                {
+                    select.setDead();
+                }
+                this.selectors.Clear();
             }
             if (this.bounds.getDistance(Program.game.ship.pos[0], Program.game.ship.pos[1]) < this.bounds.r + 5)
             {
@@ -39,19 +50,34 @@ namespace Expand
             return this.bounds;
         }
 
-        public void drawSelectorAround(int[] pos)
+        public void createSelectorsAround(int[] pos)
         {
-            int[] selector_dims = {Program.game.textures["structure\\hotbar_selector.png"].Width, Program.game.textures["structure\\hotbar_selector.png"].Height};
-            Program.game.drawSprite(Program.game.textures["structure\\hotbar_selector.png"], pos[0] + selector_dims[0], pos[1], layer: 0.2f);
+            Texture2D selector = Program.game.textures["gui\\icon\\selector_circle.png"];
+            int[] selector_dims = { selector.Width, selector.Height };
+            int PADDING = 5;
+            selectors.Add(new Selector(pos[0] + selector_dims[0] / 2 + PADDING, pos[1] - bounds.r));
+            selectors.Add(new Selector(pos[0] - selector_dims[0] / 2 - bounds.r * 2 - PADDING, pos[1] - bounds.r));
+            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] - selector_dims[1] - PADDING));
+            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] + selector_dims[1] / 2 + PADDING));
         }
 
         public override void draw()
         {
             Program.game.drawSprite(Program.game.textures["structure\\base.png"], pos[0], pos[1], layer: 0.1f, color: Color.Gold);
-            if (gui_shown)
-            {
-                //drawSelectorAround(this.pos);
-            }
+        }
+    }
+
+    public class Selector: GameObject
+    {
+        public Selector(int x, int y)
+        {
+            this.pos[0] = x;
+            this.pos[1] = y;
+        }
+
+        public override void draw()
+        {
+            Program.game.drawSprite(Program.game.textures["gui\\icon\\selector_circle.png"], pos[0], pos[1], layer: 0.2f);
         }
     }
 }

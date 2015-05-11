@@ -133,6 +133,16 @@ namespace Expand
             return new Vector2(initial_draw.X - Program.game.ship.pos[0] + Program.game.ship.draw_location[0], initial_draw.Y - Program.game.ship.pos[1] + Program.game.ship.draw_location[1]);
         }
 
+        public Vector2 spacePos(int x, int y)
+        {
+            return new Vector2(x + Program.game.ship.pos[0] - Program.game.ship.draw_location[0], y + Program.game.ship.pos[1] - Program.game.ship.draw_location[1]);
+        }
+
+        public void drawDebugSquare(int x, int y)
+        {
+            Program.game.drawSprite(textures["gui\\icon\\debug_square.png"], x, y, layer: 0.99F);
+        }
+
         public bool inView(int x, int y)
         {
             // Check if sprite is in player view
