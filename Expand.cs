@@ -54,6 +54,7 @@ namespace Expand
             ship = Ship.load();
             space = new Space();
             gui = new GUI();
+            var fps = new FPSCounter();
             base.Initialize();
         }
 

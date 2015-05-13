@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -149,5 +150,37 @@ namespace Expand
     public struct BuildCosts
     {
         public static int BASE = 100;
+    }
+
+    public struct TechTree
+    {
+        public static int NONE = 0;
+        public static int MINING = 1;
+        public static int COMBAT = 2;
+    }
+
+    public class FPSCounter: GameObject
+    {
+        public const int GOAL_FPS = 60;
+        public int last_fps = 60;
+        public int fps;
+        private long time_elapsed = 0;
+        public FPSCounter()
+        {
+            fps = 0;
+            time_elapsed = Program.game.game_time.ElapsedMilliseconds;
+        }
+
+        public override void update()
+        {
+            fps++;
+            if (Program.game.game_time.ElapsedMilliseconds - time_elapsed > 1000)
+            {
+                last_fps = fps;
+                fps = 0;
+                time_elapsed = Program.game.game_time.ElapsedMilliseconds;
+                Debug.Assert(fps > 59);
+            }
+        }
     }
 }

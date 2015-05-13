@@ -76,7 +76,7 @@ namespace Expand
                 Program.game.spriteBatch.Draw(hotbar, pos_vector, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0.99f);
                 Program.game.spriteBatch.Draw(hotbar_selector, selector_pos, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
                 Program.game.spriteBatch.Draw(tool1_icon, new Vector2(pos_vector.X + 4, pos_vector.Y + 4), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
-                //Program.game.spriteBatch.Draw(Program.game.textures["gui\\icon\\builder.png"], new Vector2(pos_vector.X + 60, pos_vector.Y + 6), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
+                Program.game.spriteBatch.Draw(Program.game.textures["gui\\icon\\builder.png"], new Vector2(pos_vector.X + 60, pos_vector.Y + 6), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
             }
 
             int[] text_pos = { 10, 5 };

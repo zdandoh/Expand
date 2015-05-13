@@ -22,10 +22,19 @@ namespace Expand
             bounds = new Circle(x, y, r);
         }
 
+        public override void setDead()
+        {
+            base.setDead();
+            foreach (Selector select in selectors)
+            {
+                select.setDead();
+            }
+        }
+
         public override void update()
         {
             Vector2 mouse_space_pos = Program.game.spacePos(Program.game.mouse.X - bounds.r, Program.game.mouse.Y - bounds.r);
-            if(bounds.Contains(new Point((int)mouse_space_pos.X, (int)mouse_space_pos.Y)) && Program.game.mouse.LeftButton == ButtonState.Pressed)
+            if(bounds.Contains(new Point((int)mouse_space_pos.X, (int)mouse_space_pos.Y)) && Program.game.mouse.LeftButton == ButtonState.Pressed && this.alive)
             {
                 gui_shown = true;
                 createSelectorsAround(this.pos);
@@ -55,10 +64,10 @@ namespace Expand
             Texture2D selector = Program.game.textures["gui\\icon\\selector_circle.png"];
             int[] selector_dims = { selector.Width, selector.Height };
             int PADDING = 5;
-            selectors.Add(new Selector(pos[0] + selector_dims[0] / 2 + PADDING, pos[1] - bounds.r));
-            selectors.Add(new Selector(pos[0] - selector_dims[0] / 2 - bounds.r * 2 - PADDING, pos[1] - bounds.r));
-            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] - selector_dims[1] - PADDING));
-            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] + selector_dims[1] / 2 + PADDING));
+            selectors.Add(new Selector(pos[0] + selector_dims[0] / 2 + PADDING, pos[1] - bounds.r, TechTree.MINING));
+            selectors.Add(new Selector(pos[0] - selector_dims[0] / 2 - bounds.r * 2 - PADDING, pos[1] - bounds.r, TechTree.COMBAT));
+            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] - selector_dims[1] - PADDING, TechTree.NONE));
+            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] + selector_dims[1] / 2 + PADDING, TechTree.NONE));
         }
 
         public override void draw()
@@ -69,10 +78,12 @@ namespace Expand
 
     public class Selector: GameObject
     {
-        public Selector(int x, int y)
+        public int tree;
+        public Selector(int x, int y, int tree)
         {
             this.pos[0] = x;
             this.pos[1] = y;
+            this.tree = tree;
         }
 
         public override void draw()
