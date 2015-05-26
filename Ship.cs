@@ -9,6 +9,9 @@ using System.Text;
 
 namespace Expand
 {
+    /// <summary>
+    /// Controls player spaceship and provides helper functions.
+    /// </summary>
     public class Ship: GameObject
     {
         private readonly Texture2D ship_texture;
@@ -35,6 +38,11 @@ namespace Expand
             this.draw_location = (int[]) this.pos.Clone();
         }
 
+        /// <summary>
+        /// Moves a number closer to 0.
+        /// </summary>
+        /// <param name="number">Any int.</param>
+        /// <returns>Moves number +-1 closer to 0. Does nothing if number is already at 0.</returns>
         public int moveCloserToZero(int number)
         {
             if (number < 0)
@@ -51,12 +59,22 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Inverts velocity vector of player. Used for bounding the played off of things.
+        /// </summary>
         public void reverse()
         {
             this.x_velocity = -this.x_velocity;
             this.y_velocity = -this.y_velocity;
         }
 
+        /// <summary>
+        /// Checks if mining laser collides with circle.
+        /// </summary>
+        /// <param name="a">Circle X coordinate.</param>
+        /// <param name="b">Circle Y coordinate.</param>
+        /// <param name="r">Radius of circle.</param>
+        /// <returns>Boolean whether or not laser collides with circle.</returns>
         public bool collideLaser(int a, int b, int r)
         {
             bool does_collide = false;
@@ -95,6 +113,9 @@ namespace Expand
             return does_collide;
         }
 
+        /// <summary>
+        /// Saves all ship data to .json file.
+        /// </summary>
         public void save()
         {
             String json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
@@ -103,6 +124,10 @@ namespace Expand
             json_fi.Close();
         }
 
+        /// <summary>
+        /// Loads all data from ship .json file.
+        /// </summary>
+        /// <returns>Instance of Ship class, with data loaded from json file.</returns>
         public static Ship load()
         {
             Ship loaded_ship;
@@ -118,6 +143,11 @@ namespace Expand
             return loaded_ship;
         }
 
+        /// <summary>
+        /// Removes minerals from ship if there are enough.
+        /// </summary>
+        /// <param name="count">Number of minerals to remove from ship.</param>
+        /// <returns>Boolean whether or not there were enough minerals to remove the specificed amount.</returns>
         public bool removeMinerals(int count)
         {
             if (this.minerals >= count)
@@ -128,6 +158,9 @@ namespace Expand
             return false;
         }
 
+        /// <summary>
+        /// Updates player position from user input. Rotates player sprite accordingly.
+        /// </summary>
         public void updatePosition()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W) && Program.game.game_time.ElapsedMilliseconds - y_velocity_change > VELOCITY_COOLDOWN)
@@ -188,11 +221,17 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Main update function for player.
+        /// </summary>
         public override void update()
         {
             this.updatePosition();
         }
 
+        /// <summary>
+        /// Draws player in the center of the screen.
+        /// </summary>
         public override void draw()
         {
             // Draw ship
@@ -202,6 +241,9 @@ namespace Expand
         }
     }
 
+    /// <summary>
+    /// Class that specifies the currently selected tool that the player will use when clicking.
+    /// </summary>
     public class Tool: GameObject
     {
         private int tool_number;
@@ -213,6 +255,10 @@ namespace Expand
             this.tool_number = 1;
         }
 
+        /// <summary>
+        /// Sets the tool the player currently has selected. 
+        /// </summary>
+        /// <param name="tool_no">The number of the tool on the hotbar, from 1-6.</param>
         public void setTool(int tool_no)
         {
             if (tool_no > 6)
@@ -229,11 +275,18 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Returns the current tool number.
+        /// </summary>
+        /// <returns>Number of currently selected tool.</returns>
         public int getTool()
         {
             return this.tool_number;
         }
 
+        /// <summary>
+        /// Main update function for tool. Changes functionality depending on what tool is selected.
+        /// </summary>
         public override void update()
         {
             if (this.tool_number == 1)
@@ -263,6 +316,9 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Draws the texture of the currently selected tool.
+        /// </summary>
         public override void draw()
         {
             if (this.tool_number == 1)

@@ -9,7 +9,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Expand
 {
-    class Builder: SpaceObject
+    /// <summary>
+    /// The basic builder core that is always intially placed when creating a new structure.
+    /// </summary>
+    public class Builder: SpaceObject
     {
         public Circle bounds;
         public List<Selector> selectors = new List<Selector>(); 
@@ -22,6 +25,9 @@ namespace Expand
             bounds = new Circle(x, y, r);
         }
 
+        /// <summary>
+        /// Kills both adjacent selectors and self
+        /// </summary>
         public override void setDead()
         {
             base.setDead();
@@ -31,22 +37,38 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Basic builder update function. Checks whether a selector is being clicked, spawns adjacent selectors, and performs collision detection.
+        /// </summary>
         public override void update()
         {
-            Vector2 mouse_space_pos = Program.game.spacePos(Program.game.mouse.X - bounds.r, Program.game.mouse.Y - bounds.r);
-            if(bounds.Contains(new Point((int)mouse_space_pos.X, (int)mouse_space_pos.Y)) && Program.game.mouse.LeftButton == ButtonState.Pressed && this.alive)
+            if (Program.game.mouse.LeftButton == ButtonState.Pressed)
             {
-                gui_shown = true;
-                createSelectorsAround(this.pos);
-            }
-            else if(Program.game.mouse.LeftButton == ButtonState.Pressed)
-            {
-                gui_shown = false;
-                foreach(Selector select in selectors)
+                foreach (Selector select in this.selectors)
                 {
-                    select.setDead();
+                    if (select.collideCursor())
+                    {
+                        if (select.build(this))
+                        {
+                            this.setDead();
+                        }
+                    }
                 }
-                this.selectors.Clear();
+                Vector2 mouse_space_pos = Program.game.spacePos(Program.game.mouse.X - bounds.r, Program.game.mouse.Y - bounds.r);
+                if (bounds.Contains(new Point((int)mouse_space_pos.X, (int)mouse_space_pos.Y)) && this.alive)
+                {
+                    gui_shown = true;
+                    createSelectorsAround(this.pos);
+                }
+                else if (Program.game.mouse.LeftButton == ButtonState.Pressed)
+                {
+                    gui_shown = false;
+                    foreach (Selector select in selectors)
+                    {
+                        select.setDead();
+                    }
+                    this.selectors.Clear();
+                }
             }
             if (this.bounds.getDistance(Program.game.ship.pos[0], Program.game.ship.pos[1]) < this.bounds.r + 5)
             {
@@ -54,11 +76,19 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Used for collision detection in sectors.
+        /// </summary>
+        /// <returns>Instance of Circle</returns>
         public override Object getCollideShape()
         {
             return this.bounds;
         }
 
+        /// <summary>
+        /// Initializes new Selectors that surround position with constant PADDING. 
+        /// </summary>
+        /// <param name="pos">Position to surround</param>
         public void createSelectorsAround(int[] pos)
         {
             Texture2D selector = Program.game.textures["gui\\icon\\selector_circle.png"];
@@ -70,12 +100,18 @@ namespace Expand
             selectors.Add(new Selector(pos[0] - bounds.r, pos[1] + selector_dims[1] / 2 + PADDING, TechTree.NONE));
         }
 
+        /// <summary>
+        /// Draws texture of build base.
+        /// </summary>
         public override void draw()
         {
             Program.game.drawSprite(Program.game.textures["structure\\base.png"], pos[0], pos[1], layer: 0.1f, color: Color.Gold);
         }
     }
 
+    /// <summary>
+    /// A GameObject that is meant to be clicked on to interface with other items and perform actions.
+    /// </summary>
     public class Selector: GameObject
     {
         public int tree;
@@ -86,6 +122,38 @@ namespace Expand
             this.tree = tree;
         }
 
+        /// <summary>
+        /// Checks if the cursor collides with the selector circle.
+        /// </summary>
+        /// <returns>Bool true if cursor collides, false otherwise.</returns>
+        public bool collideCursor()
+        {
+            bool collides = false;
+            Circle bounding_box = new Circle(pos[0], pos[1], Program.game.textures["gui\\icon\\selector_circle.png"].Width / 2);
+
+            if(bounding_box.Contains(Program.game.space_mouse))
+            {
+                collides = true;
+            }
+            return collides;
+        }
+
+        /// <summary>
+        /// General purpose function that is called when the selector is clicked on.
+        /// </summary>
+        /// <param name="child">The Builder object that this selector is connected to.s</param>
+        /// <returns>Boolean whether or not the build action was "possible"</returns>
+        public bool build(Builder child)
+        {
+            Console.WriteLine("BUILDING AT " + pos[0] + " " + pos[1]);
+            bool possible = false;
+            this.setDead();
+            return possible;
+        }
+
+        /// <summary>
+        /// Draws the texture of the Selector object.
+        /// </summary>
         public override void draw()
         {
             Program.game.drawSprite(Program.game.textures["gui\\icon\\selector_circle.png"], pos[0], pos[1], layer: 0.2f);

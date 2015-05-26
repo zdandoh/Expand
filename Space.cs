@@ -10,6 +10,9 @@ using System.IO;
 
 namespace Expand
 {
+    /// <summary>
+    /// Keeps track of which Sectors to keep loaded as the player moves through space.
+    /// </summary>
     public class Space: GameObject
     {
         public Color space_color;
@@ -21,6 +24,9 @@ namespace Expand
         public bool first_load = true; // DO NOT CHANGE THIS UNLESS YOU MEAN IT
         private Sector[,] loaded_sectors;
         private int[] player_sector = {0, 0};
+        /// <summary>
+        /// Loads all Sectors that are adjacent to the player sector.
+        /// </summary>
         public Space()
         {
             player_sector = getSector(Program.game.ship.pos[0], Program.game.ship.pos[1]);
@@ -34,6 +40,9 @@ namespace Expand
             this.player_sector[1] += -1;
         }
 
+        /// <summary>
+        /// Checks if player has moved to a new sector, if they have, unload and load any old/new sectors.
+        /// </summary>
         public override void update()
         {
             if (!player_sector.SequenceEqual(getSector(Program.game.ship.pos[0], Program.game.ship.pos[1])))
@@ -57,9 +66,11 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Deletes all saved sector files
+        /// </summary>
         private static void clearSpace()
         {
-            // Deletes all saved sector files
             DirectoryInfo space_dir = new DirectoryInfo("Content//space//sectors");
             foreach (FileInfo sector_file in space_dir.GetFiles())
             {
@@ -70,15 +81,26 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Returns a sector from memory. Sector must first be loaded in memory.
+        /// </summary>
+        /// <param name="x">Sector coordinate X.</param>
+        /// <param name="y">Sector coordinate Y.</param>
+        /// <returns></returns>
         public Sector findLoadedSector(int x, int y)
         {
-            // Won't load a sector from disk, only memory
             return findSector(x, y, load: false);
         }
 
+        /// <summary>
+        /// Obtains sector by: getting from memory, generating new sector, or loading from file
+        /// </summary>
+        /// <param name="x">Sector coordinate X.</param>
+        /// <param name="y">Sector coordinate Y.</param>
+        /// <param name="load">Boolean whether or not to load the sector from disk if it is not already in memory.</param>
+        /// <returns></returns>
         public Sector findSector(int x, int y, bool load = true)
         {
-            // Checks if sector is loaded, generates new sector, or loads from file
             Sector return_sector;
             // Check if sector already is loaded
             foreach (Sector loaded_sector in loaded_sectors)
@@ -111,6 +133,11 @@ namespace Expand
             return return_sector;
         }
 
+        /// <summary>
+        /// Checks if there is room for a SpaceObject to be placed. 
+        /// </summary>
+        /// <param name="item_to_place">SpaceObject to be placed in sector.</param>
+        /// <returns>Boolean whether or not there is a place for the SpaceObject.</returns>
         public bool canPlace(dynamic item_to_place)
         {
             bool can_place = true;
@@ -127,6 +154,12 @@ namespace Expand
             return can_place;
         }
 
+        /// <summary>
+        /// Checks whether a given sector is still adjacent to the sector that the player is currently in.
+        /// </summary>
+        /// <param name="old_sector">Sector that may or may not be adjacent.</param>
+        /// <param name="adjacent_sectors">Currently adjacent sectors.</param>
+        /// <returns></returns>
         public bool sectorStillAdjacent(Sector old_sector, Sector[,] adjacent_sectors){
             bool still_adjacent = false;
             for (int sector_row = 0; sector_row < adjacent_sectors.GetLength(0); sector_row++)
@@ -146,6 +179,9 @@ namespace Expand
             return still_adjacent;
         }
 
+        /// <summary>
+        /// Loads and unloads new/old sectors after the player moves to a new sector.
+        /// </summary>
         public void loadAdjacentSectors()
         {
             Sector[,] adjacent_sectors = getAdjacentSectors();
@@ -155,8 +191,9 @@ namespace Expand
             {
                 for (int sector_x = 0; sector_x < adjacent_sectors.GetLength(1); sector_x++)
                 {
-                    if (!this.sectorStillAdjacent(loaded_sectors[sector_row, sector_x], adjacent_sectors))
+                    if (!this.sectorStillAdjacent(loaded_sectors[sector_row, sector_x], adjacent_sectors) && loaded_sectors[sector_row, sector_x] != null)
                     {
+                        // Sometimes sectors go null and would cause an error if not for the check in the if.
                         // Sector needs to be unloaded
                         loaded_sectors[sector_row, sector_x].unload();
                         loaded_sectors[sector_row, sector_x].space_objects = null;
@@ -180,11 +217,21 @@ namespace Expand
             Program.game.object_handler.middle_list_locked = false;
         }
 
+        /// <summary>
+        /// Returns the coordinates of the sector that the player is currently in.
+        /// </summary>
+        /// <returns>Coordinates of sector that player is currently in.</returns>
         public int[] getPlayerSector()
         {
             return getSector(Program.game.ship.pos[0], Program.game.ship.pos[1]);
         }
 
+        /// <summary>
+        /// Given space level coordinates, returns the coordinates of the sector that that point resides in.
+        /// </summary>
+        /// <param name="x">Space level coordinate X.</param>
+        /// <param name="y">Space level coordinate Y.</param>
+        /// <returns>Sector level coordinate pair.</returns>
         public static int[] getSector(int x, int y)
         {
             // Tracks what sector the player is in, rather clumsily
@@ -213,6 +260,10 @@ namespace Expand
             return sector;
         }
 
+        /// <summary>
+        /// Returns 3x3 array of empty sectors next to player that are initialized but not loaded.
+        /// </summary>
+        /// <returns>3x3 array of initialized but unloaded sectors.</returns>
         public Sector[,] getAdjacentSectors()
         {
             Sector[,] adjacent_sectors = new Sector[3, 3];
@@ -229,6 +280,11 @@ namespace Expand
             return adjacent_sectors;
         }
 
+        /// <summary>
+        /// Checks if a number is positive.
+        /// </summary>
+        /// <param name="number">Number to check.</param>
+        /// <returns>Returns 0 if number = 0, -1 if number < 0, and 1 if number > 0</returns>
         public int isPositive(int number)
         {
             if (number > 0)
@@ -245,6 +301,9 @@ namespace Expand
         }
     }
 
+    /// <summary>
+    /// A "star" SpaceObject. The most common, fills most of space.
+    /// </summary>
     public class Star: SpaceObject
     {
         public int texture_number;
@@ -259,16 +318,28 @@ namespace Expand
             this.addToSector(sector_inside);
         }
 
+        /// <summary>
+        /// Returns star collideshape, which is always false.
+        /// </summary>
+        /// <returns>false</returns>
         public override Object getCollideShape()
         {
             return false;
         }
 
+        /// <summary>
+        /// Draws a star texture in space.
+        /// </summary>
         public override void draw()
         {
             Program.game.drawSprite(this.getTexture(texture_number), pos[0], pos[1], layer: 0f);
         }
 
+        /// <summary>
+        /// Returns one of the star textures. Based on the value that is saved with the star.
+        /// </summary>
+        /// <param name="number">Texture number of star.</param>
+        /// <returns>A Texture2D of a star.</returns>
         public Texture2D getTexture(int number)
         {
             Texture2D return_texture = Program.game.space.star_texture1;
@@ -284,6 +355,9 @@ namespace Expand
         }
     }
 
+    /// <summary>
+    /// Mineral giving SpaceObject.
+    /// </summary>
     public class Asteroid: SpaceObject
     {
         public int diameter;
@@ -305,11 +379,18 @@ namespace Expand
             this.addToSector(sector_inside);
         }
 
+        /// <summary>
+        /// Returns circular collideshape of asteroid
+        /// </summary>
+        /// <returns>Circle collideShape</returns>
         public override Object getCollideShape()
         {
             return new Circle(pos[0], pos[1], this.diameter / 2);
         }
 
+        /// <summary>
+        /// Scales and draws asteroid based on diameter and level of unmined minerals.
+        /// </summary>
         public override void draw()
         {
             float scale = diameter / 50f;
@@ -320,6 +401,11 @@ namespace Expand
             Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale, color: asteroid_color, layer: 0.1f);
         }
 
+        /// <summary>
+        /// Attempts to remove minerals from asteroid.
+        /// </summary>
+        /// <param name="count">Number of minerals to remove.</param>
+        /// <returns>Boolean whether or not the minerals could be removed.</returns>
         public int harvestMinerals(int count = 1)
         {
             if (this.minerals > 0)
@@ -334,6 +420,9 @@ namespace Expand
             return count;
         }
 
+        /// <summary>
+        /// Increases the mineral count by a small amount.
+        /// </summary>
         public void replenishMinerals()
         {
             if (this.minerals < this.diameter * 5)
@@ -342,6 +431,9 @@ namespace Expand
             }
         }
 
+        /// <summary>
+        /// Handles collision detection, mineral regeneration, and mining.
+        /// </summary>
         public override void update()
         {
             if (Util.distance(Program.game.ship.pos[0], Program.game.ship.pos[1], this.center_point[0], this.center_point[1]) <= this.diameter / 2 + Asteroid.PADDING_DISTANCE)

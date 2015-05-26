@@ -49,3 +49,5 @@ bin
 *.suo
 publish
 *.user
+Help
+*.shfbproj

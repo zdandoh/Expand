@@ -8,6 +8,9 @@ using System.Text;
 
 namespace Expand
 {
+    /// <summary>
+    /// Controls parts of the user interface and HUD.
+    /// </summary>
     public class GUI: GameObject
     {
         public int last_scroll = 0;
@@ -17,6 +20,9 @@ namespace Expand
         public Texture2D hotbar_selector;
         public Texture2D tool1_icon;
 
+        /// <summary>
+        /// Assigns GUI textures to shorthand variables.
+        /// </summary>
         public GUI()
         {
             hotbar = Program.game.textures["gui\\hotbar.png"];
@@ -24,6 +30,9 @@ namespace Expand
             tool1_icon = Program.game.textures["gui\\icon\\mining_laser.png"];
         }
 
+        /// <summary>
+        /// Checks for which GUI elements should be displayed, updates hotbar position.
+        /// </summary>
         public override void update()
         {
             MouseState mouse = Mouse.GetState();
@@ -66,6 +75,9 @@ namespace Expand
 
         }
 
+        /// <summary>
+        /// Draws all GUI textures in correct order at the correct time.
+        /// </summary>
         public override void draw()
         {
             if (Program.game.game_time.ElapsedMilliseconds - last_scroll_time < 2000)
@@ -83,6 +95,7 @@ namespace Expand
             int[] sector_text_pos = { 10, 20 };
             Program.game.drawText(Program.game.ship.minerals.ToString(), text_pos, Color.White);
             Program.game.drawText(Program.game.space.getPlayerSector()[0] + ", " + Program.game.space.getPlayerSector()[1], sector_text_pos, Color.White);
+            Program.game.drawText(Program.game.fps_counter.last_fps.ToString(), new int[] { 10, 40 }, Color.White);
         }
     }
 }
