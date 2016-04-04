@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Expand
+namespace Expand.core.gui
 {
     /// <summary>
     /// Controls parts of the user interface and HUD.
     /// </summary>
-    public class GUI: GameObject
+    public class Toolbar: GameObject
     {
         public int last_scroll = 0;
         public long last_scroll_time = 0;
@@ -23,7 +23,7 @@ namespace Expand
         /// <summary>
         /// Assigns GUI textures to shorthand variables.
         /// </summary>
-        public GUI()
+        public Toolbar()
         {
             hotbar = Program.game.textures["gui\\hotbar.png"];
             hotbar_selector = Program.game.textures["gui\\hotbar_selector.png"];

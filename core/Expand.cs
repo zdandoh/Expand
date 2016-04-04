@@ -2,14 +2,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
 using System.Diagnostics;
-using System.Threading;
 using System.IO;
+using Expand.core.gui;
 #endregion
 
 namespace Expand
@@ -23,7 +20,8 @@ namespace Expand
         public ObjectHandler object_handler;
         public Space space;
         public Ship ship;
-        public GUI gui;
+        public Toolbar toolbar;
+        public TechTree tech_tree;
         public int[] screen_size = { 800, 600 };
         public Texture2D line_texture;
         public Stopwatch game_time = new Stopwatch();
@@ -42,9 +40,10 @@ namespace Expand
         {
             base.IsFixedTimeStep = false;
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
+            // graphics.IsFullScreen = true;
             graphics.PreferredBackBufferHeight = screen_size[1];
             graphics.PreferredBackBufferWidth = screen_size[0];
+
             Content.RootDirectory = "Content";
         }
 
@@ -59,7 +58,8 @@ namespace Expand
             object_handler = new ObjectHandler();
             ship = Ship.load();
             space = new Space();
-            gui = new GUI();
+            tech_tree = new TechTree();
+            toolbar = new Toolbar();
             fps_counter = new FPSCounter();
             base.Initialize();
         }
@@ -210,7 +210,7 @@ namespace Expand
         public bool inView(int x, int y)
         {
             // Check if sprite is in player view
-            return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 250000;
+            return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 2500000;
         }
 
         /// <summary>

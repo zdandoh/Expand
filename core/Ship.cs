@@ -16,7 +16,8 @@ namespace Expand
     {
         private readonly Texture2D ship_texture;
         public Tool tool;
-        public int[] draw_location;
+        private int[] _draw_location;
+        public int[] draw_location { get; private set; }
         public int minerals = 0;
         private float radians = 0;
         private bool preserve_rotation = false;
@@ -36,6 +37,11 @@ namespace Expand
             this.pos[0] -= ship_texture.Width / 2;
             this.pos[1] -= ship_texture.Height / 2;
             this.draw_location = (int[]) this.pos.Clone();
+        }
+
+        public int[] getDrawLocation()
+        {
+            return this.draw_location;
         }
 
         /// <summary>

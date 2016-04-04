@@ -29,7 +29,7 @@ namespace Expand
         {
             return Math.Sqrt(n1 * n1 - n2 * n2);
         }
-
+        
         /// <summary>
         /// Inserts newlines into text between words at certain intervals.
         /// </summary>
@@ -52,6 +52,14 @@ namespace Expand
                 }
             }
             return new_string;
+        }
+
+        public static bool toggle(bool boolean)
+        {
+            if (!boolean) {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

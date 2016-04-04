@@ -57,7 +57,6 @@ namespace Expand
                 Vector2 mouse_space_pos = Program.game.spacePos(Program.game.mouse.X - bounds.r, Program.game.mouse.Y - bounds.r);
                 if (bounds.Contains(new Point((int)mouse_space_pos.X, (int)mouse_space_pos.Y)) && this.alive)
                 {
-                    gui_shown = true;
                     createSelectorsAround(this.pos);
                 }
                 else if (Program.game.mouse.LeftButton == ButtonState.Pressed)
@@ -91,13 +90,16 @@ namespace Expand
         /// <param name="pos">Position to surround</param>
         public void createSelectorsAround(int[] pos)
         {
-            Texture2D selector = Program.game.textures["gui\\icon\\selector_circle.png"];
-            int[] selector_dims = { selector.Width, selector.Height };
-            int PADDING = 5;
-            selectors.Add(new Selector(pos[0] + selector_dims[0] / 2 + PADDING, pos[1] - bounds.r, TechTree.MINING));
-            selectors.Add(new Selector(pos[0] - selector_dims[0] / 2 - bounds.r * 2 - PADDING, pos[1] - bounds.r, TechTree.COMBAT));
-            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] - selector_dims[1] - PADDING, TechTree.NONE));
-            selectors.Add(new Selector(pos[0] - bounds.r, pos[1] + selector_dims[1] / 2 + PADDING, TechTree.NONE));
+            if (!this.gui_shown) {
+                Texture2D selector = Program.game.textures["gui\\icon\\selector_circle.png"];
+                int[] selector_dims = { selector.Width, selector.Height };
+                int PADDING = 5;
+                selectors.Add(new Selector(pos[0] + selector_dims[0] / 2 + PADDING, pos[1] - bounds.r, TechTree.MINING));
+                selectors.Add(new Selector(pos[0] - selector_dims[0] / 2 - bounds.r * 2 - PADDING, pos[1] - bounds.r, TechTree.COMBAT));
+                selectors.Add(new Selector(pos[0] - bounds.r, pos[1] - selector_dims[1] - PADDING, TechTree.NONE));
+                selectors.Add(new Selector(pos[0] - bounds.r, pos[1] + selector_dims[1] / 2 + PADDING, TechTree.NONE));
+                this.gui_shown = true;
+            }
         }
 
         /// <summary>
@@ -145,10 +147,22 @@ namespace Expand
         /// <returns>Boolean whether or not the build action was "possible"</returns>
         public bool build(Builder child)
         {
-            Console.WriteLine("BUILDING AT " + pos[0] + " " + pos[1]);
             bool possible = false;
             this.setDead();
             return possible;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void update()
+        {
+            if (this.collideCursor())
+            {
+                if (Program.game.mouse.LeftButton == ButtonState.Pressed) {
+                    this.setDead();
+                }
+            }
         }
 
         /// <summary>
@@ -156,6 +170,9 @@ namespace Expand
         /// </summary>
         public override void draw()
         {
+            int[] yolo = Util.screenPosToSpacePos(Program.game.mouse.X, Program.game.mouse.Y);
+            Program.game.drawDebugSquare(pos[0], pos[1]);
+            Program.game.drawDebugSquare(yolo[0], yolo[1]);
             Program.game.drawSprite(Program.game.textures["gui\\icon\\selector_circle.png"], pos[0], pos[1], layer: 0.2f);
         }
     }

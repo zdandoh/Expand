@@ -28,6 +28,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -38,6 +40,7 @@
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -48,6 +51,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Windows\Release\Expand.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -66,17 +70,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Builder.cs" />
-    <Compile Include="Dialog.cs" />
-    <Compile Include="Expand.cs" />
-    <Compile Include="GameObject.cs" />
-    <Compile Include="GUI.cs" />
-    <Compile Include="ObjectHandler.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="core\Building.cs" />
+    <Compile Include="core\Dialog.cs" />
+    <Compile Include="core\Expand.cs" />
+    <Compile Include="core\GameObject.cs" />
+    <Compile Include="core\gui\TechTree.cs" />
+    <Compile Include="core\gui\Toolbar.cs" />
+    <Compile Include="core\ObjectHandler.cs" />
+    <Compile Include="core\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sector.cs" />
-    <Compile Include="Ship.cs" />
-    <Compile Include="Space.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="core\Sector.cs" />
+    <Compile Include="core\Ship.cs" />
+    <Compile Include="core\Space.cs" />
+    <Compile Include="core\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -97,13 +103,22 @@
     <Content Include="Content\gui\hotbar_selector.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\gui\icon\boom.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\gui\icon\builder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\gui\icon\debug_square.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\gui\icon\mine.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\gui\icon\mining_laser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\gui\icon\science.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\gui\icon\selector_circle.png">
@@ -113,6 +128,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\gui\prompt\button.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\gui\tech_outline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\ships\ship.png">
@@ -134,6 +152,7 @@
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Content\font\freesansbold.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -172,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\shader\" />
+    <Folder Include="entity\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
