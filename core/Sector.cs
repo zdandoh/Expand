@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace Expand
+namespace Expand.core
 {
     /// <summary>
     /// An instance of the sector class is a unit of space. Mostly just a container for SpaceObjects and helper methods for saving and loading.

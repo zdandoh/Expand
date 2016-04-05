@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Expand
+namespace Expand.core
 {
     /// <summary>
     /// Misc functions that are useful for stuff and I don't want to make a separate class for.
@@ -225,16 +225,6 @@ namespace Expand
     public struct BuildCosts
     {
         public static int BASE = 100;
-    }
-    
-    /// <summary>
-    /// Struct stores numbers that each represent a branch of the tech tree.
-    /// </summary>
-    public struct TechTree
-    {
-        public static int NONE = 0;
-        public static int MINING = 1;
-        public static int COMBAT = 2;
     }
 
     /// <summary>

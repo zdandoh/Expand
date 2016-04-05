@@ -11,15 +11,12 @@ namespace Expand.core.gui
         private Texture2D tech_outline;
         public TechTree()
         {
-            tech_outline = Program.game.textures["gui\\hotbar.png"];
-            shown = false;
+            tech_outline = Program.game.textures["gui\\prompt\\box.png"];
+            shown = true;
         }
 
         public override void update()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.B)) {
-                shown = Util.toggle(shown);
-            }
         }
 
         public override void draw()

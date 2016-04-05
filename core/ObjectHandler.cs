@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Expand
+namespace Expand.core
 {
     /// <summary>
     /// Responsible for updating and drawing all GameObjects once per frame.

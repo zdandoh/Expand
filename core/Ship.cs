@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Expand.core.gui;
 
-namespace Expand
+namespace Expand.core
 {
     /// <summary>
     /// Controls player spaceship and provides helper functions.
@@ -16,7 +17,6 @@ namespace Expand
     {
         private readonly Texture2D ship_texture;
         public Tool tool;
-        private int[] _draw_location;
         public int[] draw_location { get; private set; }
         public int minerals = 0;
         private float radians = 0;
@@ -304,20 +304,7 @@ namespace Expand
             {
                 if (Program.game.mouse.LeftButton == ButtonState.Pressed)
                 {
-                    // Try to place a new core
-                    Texture2D base_tex = Program.game.textures["structure\\base.png"];
-                    int[] real_pos = Util.screenPosToSpacePos(Program.game.mouse.X - base_tex.Width / 2, Program.game.mouse.Y - base_tex.Width / 2);
-                    int[] builder_sector_pos = Space.getSector(real_pos[0], real_pos[1]);
-                    Sector builder_sector = Program.game.space.findLoadedSector(builder_sector_pos[0], builder_sector_pos[1]);
-                    Builder new_build = new Builder(builder_sector, real_pos[0], real_pos[1]);
-                    if (Program.game.space.canPlace(new_build) && Program.game.ship.removeMinerals(BuildCosts.BASE))
-                    {
-                        new_build.addToSector(new_build.getContainingSector());
-                    }
-                    else
-                    {
-                        new_build.setDead();
-                    }
+                    TechTree tech_tree = new TechTree();
                 }
             }
         }

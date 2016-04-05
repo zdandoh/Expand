@@ -7,9 +7,10 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.IO;
 using Expand.core.gui;
+using Expand.core;
 #endregion
 
-namespace Expand
+namespace Expand.core
 {
     /// <summary>
     /// This is the main type for your game
@@ -22,7 +23,7 @@ namespace Expand
         public Ship ship;
         public Toolbar toolbar;
         public TechTree tech_tree;
-        public int[] screen_size = { 1900, 1060 };
+        public int[] screen_size = { 1920, 1080 };
         public Texture2D line_texture;
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
@@ -209,7 +210,7 @@ namespace Expand
         public bool inView(int x, int y)
         {
             // Check if sprite is in player view
-            return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < 2500000;
+            return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < Program.game.screen_size[0] * Program.game.screen_size[1];
         }
 
         /// <summary>

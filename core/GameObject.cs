@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Expand
+namespace Expand.core
 {
     /// <summary>
     /// Base class for each object in the game. Provides dummy update and draw methods, along with basic data of every GameObject.

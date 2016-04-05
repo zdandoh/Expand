@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.IO;
 
-namespace Expand
+namespace Expand.core
 {
     /// <summary>
     /// Keeps track of which Sectors to keep loaded as the player moves through space.
