@@ -22,7 +22,7 @@ namespace Expand
         public Ship ship;
         public Toolbar toolbar;
         public TechTree tech_tree;
-        public int[] screen_size = { 800, 600 };
+        public int[] screen_size = { 1900, 1060 };
         public Texture2D line_texture;
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
@@ -35,12 +35,11 @@ namespace Expand
         public Effect test_shader;
         public FPSCounter fps_counter;
 
-        public Expand()
-            : base()
+        public Expand() : base()
         {
             base.IsFixedTimeStep = false;
             graphics = new GraphicsDeviceManager(this);
-            // graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.PreferredBackBufferHeight = screen_size[1];
             graphics.PreferredBackBufferWidth = screen_size[0];
 
