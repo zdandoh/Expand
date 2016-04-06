@@ -61,6 +61,17 @@ namespace Expand.core
             }
             return false;
         }
+        
+        public static void pythonPrint(Vector2 vector)
+        {
+            Console.WriteLine(String.Format("[{0}, {1}]", vector.X, vector.Y));
+        }
+
+        public static void pythonPrint(int[] array)
+        {
+            String joined = String.Join(", ", array);
+            Console.WriteLine(String.Format("[{0}]", joined));
+        }
 
         /// <summary>
         /// Converts screen coordinates to space coordinates.

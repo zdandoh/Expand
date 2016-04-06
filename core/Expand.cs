@@ -23,7 +23,8 @@ namespace Expand.core
         public Ship ship;
         public Toolbar toolbar;
         public TechTree tech_tree;
-        public int[] screen_size = { 1920, 1080 };
+        public static int[] screen_size = { 1920, 1080 };
+        public static float gui_scale = screen_size[0] /  3840f;
         public Texture2D line_texture;
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
@@ -40,7 +41,7 @@ namespace Expand.core
         {
             base.IsFixedTimeStep = false;
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferHeight = screen_size[1];
             graphics.PreferredBackBufferWidth = screen_size[0];
 
@@ -210,7 +211,7 @@ namespace Expand.core
         public bool inView(int x, int y)
         {
             // Check if sprite is in player view
-            return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < Program.game.screen_size[0] * Program.game.screen_size[1];
+            return (x - Program.game.ship.pos[0]) * (x - Program.game.ship.pos[0]) + (y - Program.game.ship.pos[1])*(y - Program.game.ship.pos[1]) < Expand.screen_size[0] * Expand.screen_size[1];
         }
 
         /// <summary>
@@ -260,6 +261,13 @@ namespace Expand.core
             Vector2 pos_vector = new Vector2(pos[0], pos[1]);
             Vector2 origin = new Vector2(0, 0);
             this.spriteBatch.DrawString(this.default_font, text, pos_vector, text_color, 0F, origin, scale, SpriteEffects.None, layer);
+        }
+
+        public void drawGUI(Texture2D texture, int x_percent, int y_percent, float rotation = 0)
+        {
+            Vector2 pos_vector = new Vector2((float)x_percent / 100f * Expand.screen_size[0], (float)y_percent / 100f * Expand.screen_size[1]);
+            Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            this.spriteBatch.Draw(texture, pos_vector, null, Color.White, rotation, origin, 1f * Expand.gui_scale, SpriteEffects.None, 0.99f);
         }
     }
 }

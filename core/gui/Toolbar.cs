@@ -82,7 +82,7 @@ namespace Expand.core.gui
         {
             if (Program.game.game_time.ElapsedMilliseconds - last_scroll_time < 2000)
             {
-                Vector2 pos_vector = new Vector2(Program.game.screen_size[0] / 2 - hotbar.Width / 2, Program.game.screen_size[1] - hotbar.Height);
+                Vector2 pos_vector = new Vector2(Expand.screen_size[0] / 2 - hotbar.Width / 2, Expand.screen_size[1] - hotbar.Height);
                 Vector2 selector_pos = new Vector2(pos_vector.X + 54 * Program.game.ship.tool.getTool() - 51 + special_additive, pos_vector.Y + 2);
                 Vector2 origin = new Vector2(0, 0);
                 Program.game.spriteBatch.Draw(hotbar, pos_vector, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0.99f);

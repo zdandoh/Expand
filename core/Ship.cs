@@ -30,8 +30,8 @@ namespace Expand.core
 
         public Ship()
         {
-            pos[0] = Program.game.screen_size[0] / 2;
-            pos[1] = Program.game.screen_size[1] / 2;
+            pos[0] = Expand.screen_size[0] / 2;
+            pos[1] = Expand.screen_size[1] / 2;
             ship_texture = Program.game.textures["ships\\ship.png"];
             tool = new Tool();
             this.pos[0] -= ship_texture.Width / 2;
