@@ -24,11 +24,16 @@ namespace Expand.core.gui
             // Draw tech tree triangles
             Vector2 origin = new Vector2(tech_outline.Height * Expand.gui_scale, tech_outline.Width * Expand.gui_scale);
             float rotation = 0;
-            for(int screen_percent = 40; screen_percent < 65; screen_percent += 5)
+            for(int screen_percent = 45; screen_percent < 60; screen_percent += 5)
             {
                 Program.game.drawGUI(tech_outline, screen_percent, 50, rotation);
                 rotation = toggleRotation(rotation);
             }
+
+            // Draw icons on top of the stuff
+            Program.game.drawGUI(Program.game.textures["gui\\icon\\boom.png"], 55, 51);
+            Program.game.drawGUI(Program.game.textures["gui\\icon\\science.png"], 50, 48);
+            Program.game.drawGUI(Program.game.textures["gui\\icon\\mine.png"], 45, 52);
         }
 
         public float toggleRotation(float rotation)
