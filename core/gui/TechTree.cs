@@ -30,7 +30,7 @@ namespace Expand.core.gui
                 rotation = toggleRotation(rotation);
             }
 
-            // Draw icons on top of the stuff
+            // Draw icons on top of the triangles
             Program.game.drawGUI(Program.game.textures["gui\\icon\\boom.png"], 55, 51);
             Program.game.drawGUI(Program.game.textures["gui\\icon\\science.png"], 50, 48);
             Program.game.drawGUI(Program.game.textures["gui\\icon\\mine.png"], 45, 52);

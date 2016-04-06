@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,19 @@ namespace Expand.core
         // Anything that should be saved in a sector file is a space object
         bool space_object = true;
         protected Object collide_object;
+        private Texture2D texture;
+        private Color[] texture_bytes;
+
+        public SpaceObject(Texture2D texture)
+        {
+            texture_bytes = new Color[texture.Width * texture.Height];
+            texture.GetData(texture_bytes);
+        }
+
+        public SpaceObject()
+        {
+
+        }
 
         /// <summary>
         /// Adds self to the sector that created it upon initialization.
@@ -101,6 +115,32 @@ namespace Expand.core
         /// Must be implemented to be able to collide with other SpaceObjects.
         /// </summary>
         /// <returns>Any collision object that has fully implemented collision methods.</returns>
+        public bool collidesWith(SpaceObject obj)
+        {
+            // Calculate the intersecting rectangle
+            int x1 = Math.Max(this.pos[0], obj.pos[0]);
+            int x2 = Math.Min(this.pos[0] + this.texture.Bounds.Width, obj.pos[0] + obj.texture.Bounds.Width);
+
+            int y1 = Math.Max(this.pos[0], obj.pos[1]);
+            int y2 = Math.Min(this.pos[1] + this.texture.Bounds.Height, obj.pos[1] + obj.texture.Bounds.Height);
+
+            for (int y = y1; y < y2; ++y)
+            {
+                for (int x = x1; x < x2; ++x)
+                {
+                    // Get the color from each texture
+                    Color a = this.texture_bytes[(x - this.pos[0]) + (y - this.pos[1]) * this.texture.Width];
+                    Color b = obj.texture_bytes[(x - obj.pos[0]) + (y - obj.pos[1]) * obj.texture.Width];
+
+                    if (a.A != 0 && b.A != 0) // If both colors are not transparent (the alpha channel is not 0), then there is a collision
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public abstract Object getCollideShape();
     }
 }
