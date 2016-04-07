@@ -23,7 +23,6 @@ namespace Expand.core
         public Space space;
         public Ship ship;
         public Toolbar toolbar;
-        public TechTree tech_tree;
         public static int[] screen_size = { 1920, 1080 };
         public static float gui_scale = screen_size[0] /  3840f;
         public Texture2D line_texture;
@@ -60,7 +59,6 @@ namespace Expand.core
             this.sprites = loadAllSprites();
             ship = Ship.load();
             space = new Space();
-            tech_tree = new TechTree();
             toolbar = new Toolbar();
             fps_counter = new FPSCounter();
             base.Initialize();

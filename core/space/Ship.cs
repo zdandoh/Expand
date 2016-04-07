@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using Expand.core.gui;
 
-namespace Expand.core
+namespace Expand.core.space
 {
     /// <summary>
     /// Controls player spaceship and provides helper functions.
