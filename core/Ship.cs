@@ -13,9 +13,8 @@ namespace Expand.core
     /// <summary>
     /// Controls player spaceship and provides helper functions.
     /// </summary>
-    public class Ship: GameObject
+    public class Ship: SpaceObject
     {
-        private Sprite ship_sprite;
         public Tool tool;
         public int[] draw_location { get; private set; }
         public int minerals = 0;
@@ -32,11 +31,20 @@ namespace Expand.core
         {
             pos[0] = Expand.screen_size[0] / 2;
             pos[1] = Expand.screen_size[1] / 2;
-            this.ship_sprite = Program.game.sprites["ships\\ship.png"];
             tool = new Tool();
-            this.pos[0] -= ship_sprite.getFrame().Width / 2;
-            this.pos[1] -= ship_sprite.getFrame().Height / 2;
+            this.pos[0] -= sprite.getFrame().Width / 2;
+            this.pos[1] -= sprite.getFrame().Height / 2;
             this.draw_location = (int[]) this.pos.Clone();
+        }
+
+        public override void setSprite()
+        {
+            this.sprite = Program.game.sprites["ships\\ship.png"];
+        }
+
+        public override Object getCollideShape()
+        {
+            return false;
         }
 
         public int[] getDrawLocation()
@@ -243,7 +251,7 @@ namespace Expand.core
             // Draw ship
             Vector2 pos_vector = new Vector2(draw_location[0], draw_location[1]);
             Vector2 origin = new Vector2(10, 10);
-            Program.game.spriteBatch.Draw(this.ship_sprite.getFrame(), pos_vector, null, Color.White, radians, origin, 1, SpriteEffects.None, 0.9f);
+            Program.game.spriteBatch.Draw(this.sprite.getFrame(), pos_vector, null, Color.White, radians, origin, 1, SpriteEffects.None, 0.9f);
         }
     }
 
