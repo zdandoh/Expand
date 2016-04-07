@@ -7,8 +7,8 @@ namespace Expand.core
 {
     class Dialog: GameObject
     {
-        Texture2D box_texture = Program.game.textures["gui\\prompt\\box.png"];
-        Texture2D button_texture = Program.game.textures["gui\\prompt\\button.png"];
+        Texture2D box_texture = Program.game.sprites["gui\\prompt\\box.png"].getFrame();
+        Texture2D button_texture = Program.game.sprites["gui\\prompt\\button.png"].getFrame();
         String prompt;
         public Dialog(String prompt)
         {

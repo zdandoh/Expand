@@ -8,22 +8,19 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.IO;
 
-namespace Expand.core
+namespace Expand.core.space
 {
     /// <summary>
     /// Keeps track of which Sectors to keep loaded as the player moves through space.
     /// </summary>
-    public class Space: GameObject
+    public class Space : GameObject
     {
         public Color space_color;
-        public Texture2D star_texture1 = Program.game.textures["space\\star1.png"];
-        public Texture2D star_texture2 = Program.game.textures["space\\star2.png"];
-        public Texture2D asteroid_texture = Program.game.textures["space\\asteroid.png"];
         public const int SECTOR_SIZE = 5000;
         public const bool CLEAR_SECTOR = false; // Resets the sector files at runtime if true
         public bool first_load = true; // DO NOT CHANGE THIS UNLESS YOU MEAN IT
         private Sector[,] loaded_sectors;
-        private int[] player_sector = {0, 0};
+        private int[] player_sector = { 0, 0 };
         /// <summary>
         /// Loads all Sectors that are adjacent to the player sector.
         /// </summary>
@@ -121,7 +118,7 @@ namespace Expand.core
                 Sector saved_sector = Sector.load(x, y);
                 return saved_sector;
             }
-            else if(load)
+            else if (load)
             {
                 return_sector = new Sector(x, y);
                 return_sector.generate();
@@ -160,7 +157,8 @@ namespace Expand.core
         /// <param name="old_sector">Sector that may or may not be adjacent.</param>
         /// <param name="adjacent_sectors">Currently adjacent sectors.</param>
         /// <returns></returns>
-        public bool sectorStillAdjacent(Sector old_sector, Sector[,] adjacent_sectors){
+        public bool sectorStillAdjacent(Sector old_sector, Sector[,] adjacent_sectors)
+        {
             bool still_adjacent = false;
             for (int sector_row = 0; sector_row < adjacent_sectors.GetLength(0); sector_row++)
             {
@@ -235,7 +233,7 @@ namespace Expand.core
         public static int[] getSector(int x, int y)
         {
             // Tracks what sector the player is in, rather clumsily
-            int[] sector = {0, 0};
+            int[] sector = { 0, 0 };
             if (x < 5000 && x > 0 && y < 5000 && y > 0)
             {
                 sector[0] = 0;
@@ -295,158 +293,9 @@ namespace Expand.core
             {
                 return -1;
             }
-            else{
+            else {
                 return 0;
             }
-        }
-    }
-
-    /// <summary>
-    /// A "star" SpaceObject. The most common, fills most of space.
-    /// </summary>
-    public class Star: SpaceObject
-    {
-        public int texture_number;
-        public static int MAX_SIZE = 20;
-        public static int PER_SECTOR = 5000;
-
-        public Star(Sector sector_inside, int x, int y)
-        {
-            this.pos[0] = x;
-            this.pos[1] = y;
-            this.texture_number = Program.game.rand_gen.Next(1, 3);
-            this.addToSector(sector_inside);
-        }
-
-        /// <summary>
-        /// Returns star collideshape, which is always false.
-        /// </summary>
-        /// <returns>false</returns>
-        public override Object getCollideShape()
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Draws a star texture in space.
-        /// </summary>
-        public override void draw()
-        {
-            Program.game.drawSprite(this.getTexture(texture_number), pos[0], pos[1], layer: 0f);
-        }
-
-        /// <summary>
-        /// Returns one of the star textures. Based on the value that is saved with the star.
-        /// </summary>
-        /// <param name="number">Texture number of star.</param>
-        /// <returns>A Texture2D of a star.</returns>
-        public Texture2D getTexture(int number)
-        {
-            Texture2D return_texture = Program.game.space.star_texture1;
-            if (number == 1)
-            {
-                return_texture = Program.game.space.star_texture1;
-            }
-            else if (number == 2)
-            {
-                return_texture = Program.game.space.star_texture2;
-            }
-            return return_texture;
-        }
-    }
-
-    /// <summary>
-    /// Mineral giving SpaceObject.
-    /// </summary>
-    public class Asteroid: SpaceObject
-    {
-        public int diameter;
-        public float minerals;
-        public static int MAX_SIZE = 100;
-        public static int MIN_SIZE = 25;
-        public static int PER_SECTOR = 15;
-        public static int PADDING_DISTANCE = 15;
-        public int[] center_point = {0, 0};
-
-        public Asteroid(Sector sector_inside, int x, int y)
-        {
-            this.pos[0] = x;
-            this.pos[1] = y;
-            this.diameter = Program.game.rand_gen.Next(MIN_SIZE, MAX_SIZE);
-            this.minerals = this.diameter * 5;
-            this.center_point[0] = this.pos[0] + this.diameter / 2;
-            this.center_point[1] = this.pos[1] + this.diameter / 2;
-            this.addToSector(sector_inside);
-        }
-
-        /// <summary>
-        /// Returns circular collideshape of asteroid
-        /// </summary>
-        /// <returns>Circle collideShape</returns>
-        public override Object getCollideShape()
-        {
-            return new Circle(pos[0], pos[1], this.diameter / 2);
-        }
-
-        /// <summary>
-        /// Scales and draws asteroid based on diameter and level of unmined minerals.
-        /// </summary>
-        public override void draw()
-        {
-            float scale = diameter / 50f;
-            Vector2 pos_vector = new Vector2(pos[0], pos[1]);
-            int green_level = (int)((float)this.minerals / (float)(this.diameter * 5) * 80);
-            Color asteroid_color = new Color(0, green_level + 47, 14);
-            Vector2 origin = new Vector2(0, 0);
-            Program.game.drawSprite(Program.game.space.asteroid_texture, pos[0], pos[1], scale: scale, color: asteroid_color, layer: 0.1f);
-        }
-
-        /// <summary>
-        /// Attempts to remove minerals from asteroid.
-        /// </summary>
-        /// <param name="count">Number of minerals to remove.</param>
-        /// <returns>Boolean whether or not the minerals could be removed.</returns>
-        public int harvestMinerals(int count = 1)
-        {
-            if (this.minerals > 0)
-            {
-                this.minerals -= count;
-                Program.game.ship.minerals += count;
-            }
-            else
-            {
-                return 0;
-            }
-            return count;
-        }
-
-        /// <summary>
-        /// Increases the mineral count by a small amount.
-        /// </summary>
-        public void replenishMinerals()
-        {
-            if (this.minerals < this.diameter * 5)
-            {
-                this.minerals += 0.02F;
-            }
-        }
-
-        /// <summary>
-        /// Handles collision detection, mineral regeneration, and mining.
-        /// </summary>
-        public override void update()
-        {
-            if (Util.distance(Program.game.ship.pos[0], Program.game.ship.pos[1], this.center_point[0], this.center_point[1]) <= this.diameter / 2 + Asteroid.PADDING_DISTANCE)
-            {
-                // Stop the player from moving closer to asteroid
-                Program.game.ship.reverse();
-            }
-            int[] asteroid_draw_pos = Program.game.drawOffset(this.center_point[0], this.center_point[1]);
-            if (Program.game.ship.tool.getTool() == 1 && Program.game.inView(this.center_point[0], this.center_point[1]) && Program.game.ship.collideLaser(asteroid_draw_pos[0], asteroid_draw_pos[1], this.diameter / 2))
-            {
-                this.harvestMinerals();
-            }
-            this.replenishMinerals();
         }
     }
 }

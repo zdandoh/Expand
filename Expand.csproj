@@ -70,7 +70,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="core\Building.cs" />
-    <Compile Include="core\Collide.cs" />
     <Compile Include="core\Dialog.cs" />
     <Compile Include="core\Expand.cs" />
     <Compile Include="core\GameObject.cs" />
@@ -78,10 +77,13 @@
     <Compile Include="core\gui\Toolbar.cs" />
     <Compile Include="core\ObjectHandler.cs" />
     <Compile Include="core\Program.cs" />
+    <Compile Include="core\space\Asteroid.cs" />
+    <Compile Include="core\space\Star.cs" />
+    <Compile Include="core\Sprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="core\Sector.cs" />
     <Compile Include="core\Ship.cs" />
-    <Compile Include="core\Space.cs" />
+    <Compile Include="core\space\Space.cs" />
     <Compile Include="core\Util.cs" />
   </ItemGroup>
   <ItemGroup>

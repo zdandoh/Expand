@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using Expand.core.gui;
 using Expand.core;
+using Expand.core.space;
 #endregion
 
 namespace Expand.core
@@ -28,7 +29,7 @@ namespace Expand.core
         public Texture2D line_texture;
         public Stopwatch game_time = new Stopwatch();
         public GraphicsDeviceManager graphics;
-        public Dictionary<String, Texture2D> textures;
+        public Dictionary<String, Sprite> sprites;
         public SpriteBatch spriteBatch;
         public SpriteFont default_font;
         public SpriteFont default_font16;
@@ -53,10 +54,10 @@ namespace Expand.core
         /// </summary>
         protected override void Initialize()
         {
-            this.textures = loadAllContent();
             this.IsMouseVisible = true;
             game_time.Start();
             object_handler = new ObjectHandler();
+            this.sprites = loadAllSprites();
             ship = Ship.load();
             space = new Space();
             tech_tree = new TechTree();
@@ -78,21 +79,19 @@ namespace Expand.core
         }
 
         /// <summary>
-        /// Loads all game textures into a Dictionary with keys of path.
+        /// Loads all game textures into a sprites Dictionary with keys of path.
         /// </summary>
-        /// <returns>Dictionary that contains all Texture2D's mapped to keys of their file paths.</returns>
-        public Dictionary<String, Texture2D> loadAllContent()
+        /// <returns>Dictionary that contains all Sprites mapped to keys of their file paths.</returns>
+        public Dictionary<String, Sprite> loadAllSprites()
         {
-            Dictionary<String, Texture2D> texture_dict = new Dictionary<String, Texture2D>();
-            IEnumerable<String> files = Directory.EnumerateFiles("Content", "*.*", SearchOption.AllDirectories);
+            Dictionary<String, Sprite> sprite_dict = new Dictionary<String, Sprite>();
+            IEnumerable<String> files = Directory.EnumerateFiles("Content", "*.png", SearchOption.AllDirectories);
             foreach(String file in files)
             {
-                if(file.EndsWith(".png"))
-                {
-                    texture_dict.Add(file.Substring(8), this.loadTexture(file.Substring(8)));
-                }
+                Sprite new_sprite = new Sprite(this.loadTexture(file.Substring(8)));
+                sprite_dict.Add(file.Substring(8), new_sprite);
             }
-            return texture_dict;
+            return sprite_dict;
         }
 
         /// <summary>
@@ -199,7 +198,7 @@ namespace Expand.core
         /// <param name="y">Space coordinate Y.</param>
         public void drawDebugSquare(int x, int y)
         {
-            Program.game.drawSprite(textures["gui\\icon\\debug_square.png"], x, y, layer: 0.99F);
+            Program.game.drawSprite(sprites["gui\\icon\\debug_square.png"].getFrame(), x, y, layer: 0.99F);
         }
 
         /// <summary>
@@ -263,11 +262,11 @@ namespace Expand.core
             this.spriteBatch.DrawString(this.default_font, text, pos_vector, text_color, 0F, origin, scale, SpriteEffects.None, layer);
         }
 
-        public void drawGUI(Texture2D texture, int x_percent, int y_percent, float rotation = 0)
+        public void drawGUI(Texture2D texture, int x_percent, int y_percent, float rotation = 0, float layer = 0.99f)
         {
             Vector2 pos_vector = new Vector2((float)x_percent / 100f * Expand.screen_size[0], (float)y_percent / 100f * Expand.screen_size[1]);
             Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-            this.spriteBatch.Draw(texture, pos_vector, null, Color.White, rotation, origin, 1f * Expand.gui_scale, SpriteEffects.None, 0.99f);
+            this.spriteBatch.Draw(texture, pos_vector, null, Color.White, rotation, origin, 1f * Expand.gui_scale, SpriteEffects.None, layer);
         }
     }
 }

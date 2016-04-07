@@ -11,7 +11,7 @@ namespace Expand.core.gui
         private Texture2D tech_outline;
         public TechTree()
         {
-            tech_outline = Program.game.textures["gui\\icon\\tree_icon.png"];
+            tech_outline = Program.game.sprites["gui\\icon\\tree_icon.png"].getFrame();
         }
 
         public override void update()
@@ -26,14 +26,14 @@ namespace Expand.core.gui
             float rotation = 0;
             for(int screen_percent = 45; screen_percent < 60; screen_percent += 5)
             {
-                Program.game.drawGUI(tech_outline, screen_percent, 50, rotation);
+                Program.game.drawGUI(tech_outline, screen_percent, 50, rotation, 0.98f);
                 rotation = toggleRotation(rotation);
             }
 
             // Draw icons on top of the triangles
-            Program.game.drawGUI(Program.game.textures["gui\\icon\\boom.png"], 55, 51);
-            Program.game.drawGUI(Program.game.textures["gui\\icon\\science.png"], 50, 48);
-            Program.game.drawGUI(Program.game.textures["gui\\icon\\mine.png"], 45, 52);
+            Program.game.drawGUI(Program.game.sprites["gui\\icon\\boom.png"].getFrame(), 55, 51);
+            Program.game.drawGUI(Program.game.sprites["gui\\icon\\science.png"].getFrame(), 50, 48);
+            Program.game.drawGUI(Program.game.sprites["gui\\icon\\mine.png"].getFrame(), 45, 52);
         }
 
         public float toggleRotation(float rotation)
