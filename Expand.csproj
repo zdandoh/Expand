@@ -78,6 +78,7 @@
     <Compile Include="core\ObjectHandler.cs" />
     <Compile Include="core\Program.cs" />
     <Compile Include="core\space\Asteroid.cs" />
+    <Compile Include="core\space\SpaceObject.cs" />
     <Compile Include="core\space\Star.cs" />
     <Compile Include="core\Sprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

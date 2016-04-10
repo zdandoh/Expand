@@ -26,7 +26,7 @@ namespace Expand.core.space
         /// Returns star collideshape, which is always false.
         /// </summary>
         /// <returns>false</returns>
-        public override Object getCollideShape()
+        public override bool collidesWith(SpaceObject obj)
         {
             return false;
         }

@@ -19,6 +19,7 @@ namespace Expand.core.space
         public const int SECTOR_SIZE = 5000;
         public const bool CLEAR_SECTOR = false; // Resets the sector files at runtime if true
         public bool first_load = true; // DO NOT CHANGE THIS UNLESS YOU MEAN IT
+        private bool is_loaded = false;
         private Sector[,] loaded_sectors;
         private int[] player_sector = { 0, 0 };
         /// <summary>
@@ -61,6 +62,19 @@ namespace Expand.core.space
                 Program.game.object_handler.middle_list_locked = true;
                 sector_loader.Start();
             }
+            foreach (Sector sector in loaded_sectors)
+            {
+                is_loaded = true;
+                if (sector != null && !sector.is_loaded)
+                {
+                    is_loaded = false;
+                }
+            }
+        }
+
+        public bool isLoaded()
+        {
+            return this.is_loaded;
         }
 
         /// <summary>

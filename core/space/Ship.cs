@@ -18,7 +18,6 @@ namespace Expand.core.space
         public Tool tool;
         public int[] draw_location { get; private set; }
         public int minerals = 0;
-        private float radians = 0;
         private bool preserve_rotation = false;
         private int y_velocity = 0;
         private int x_velocity = 0;
@@ -29,6 +28,7 @@ namespace Expand.core.space
 
         public Ship()
         {
+            solid = true;
             pos[0] = Expand.screen_size[0] / 2;
             pos[1] = Expand.screen_size[1] / 2;
             tool = new Tool();
@@ -40,11 +40,6 @@ namespace Expand.core.space
         public override void setSprite()
         {
             this.sprite = Program.game.sprites["ships\\ship.png"];
-        }
-
-        public override Object getCollideShape()
-        {
-            return false;
         }
 
         public int[] getDrawLocation()
@@ -226,13 +221,17 @@ namespace Expand.core.space
                 x_velocity = -5;
             }
 
-            this.pos[1] += y_velocity;
-            this.pos[0] += x_velocity;
+            move(x_velocity, y_velocity);
 
             if (!preserve_rotation)
             {
-                radians = (float)(Math.Atan2(y_velocity, x_velocity));
+                rotation = (float)(Math.Atan2(y_velocity, x_velocity));
             }
+        }
+
+        public override void onCollide(SpaceObject obj)
+        {
+            reverse();
         }
 
         /// <summary>
@@ -240,6 +239,10 @@ namespace Expand.core.space
         /// </summary>
         public override void update()
         {
+            if (!Program.game.space.isLoaded())
+            {
+                return;
+            }
             this.updatePosition();
         }
 
@@ -250,8 +253,8 @@ namespace Expand.core.space
         {
             // Draw ship
             Vector2 pos_vector = new Vector2(draw_location[0], draw_location[1]);
-            Vector2 origin = new Vector2(10, 10);
-            Program.game.spriteBatch.Draw(this.sprite.getFrame(), pos_vector, null, Color.White, radians, origin, 1, SpriteEffects.None, 0.9f);
+            Vector2 origin = sprite.getOrigin();
+            Program.game.spriteBatch.Draw(this.sprite.getFrame(), pos_vector, null, Color.White, rotation, origin, 1, SpriteEffects.None, 0.9f);
         }
     }
 

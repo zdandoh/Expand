@@ -233,15 +233,15 @@ namespace Expand.core
         /// <param name="scale">Scale of sprite to be drawn. Default is 1x.</param>
         /// <param name="layer">Depth layer of sprite to be drawn. From 0-1. Default is 1.</param>
         /// <param name="color">Color modifier of Texture2D.</param>
-        public void drawSprite(Texture2D texture, int x, int y, float scale = 1, float layer = 1, Color? color = null)
+        public void drawSprite(Texture2D texture, int x, int y, float scale = 1, float layer = 1, Vector2? origin = null, Color? color = null)
         {
             if (this.inView(x, y))
             {
                 Color draw_color = color ?? Color.White;
                 int[] draw_pos = this.drawOffset(x, y);
                 Vector2 pos_vector = new Vector2(draw_pos[0], draw_pos[1]);
-                Vector2 origin = new Vector2(0, 0);
-                this.spriteBatch.Draw(texture, pos_vector, null, draw_color, 0F, origin, scale, SpriteEffects.None, layer);
+                Vector2 draw_origin = origin ?? new Vector2(0, 0);
+                this.spriteBatch.Draw(texture, pos_vector, null, draw_color, 0F, draw_origin, scale, SpriteEffects.None, layer);
             }
         }
 

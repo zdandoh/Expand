@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Expand.core.space;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,6 @@ namespace Expand.core
 {
     public abstract class Building: SpaceObject
     {
-        public abstract override Object getCollideShape();
-
         public static int BUILD_COST;
 
         public virtual void create()

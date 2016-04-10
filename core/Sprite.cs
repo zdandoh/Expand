@@ -14,14 +14,14 @@ namespace Expand.core
         private List<Color[]> meshes;
         private int texture_index = 0;
 
-        public Sprite(Texture2D first_texture)
+        public Sprite(Texture2D first_texture, float rotation = 0f, float scale = 0f)
         {
             textures = new List<Texture2D>();
             meshes = new List<Color[]>();
-            this.addTexture(first_texture);
+            this.addTexture(first_texture, rotation, scale);
         }
 
-        public void addTexture(Texture2D new_texture)
+        public void addTexture(Texture2D new_texture, float rotation = 0f, float scale = 0f)
         {
             Color[] new_mesh = new Color[new_texture.Width * new_texture.Height];
             new_texture.GetData(new_mesh);
@@ -33,6 +33,16 @@ namespace Expand.core
         public Texture2D getFrame()
         {
             return textures[texture_index];
+        }
+
+        public Color[] getMesh()
+        {
+            return meshes[texture_index];
+        }
+
+        public Vector2 getOrigin()
+        {
+            return new Vector2(textures[texture_index].Height / 2, textures[texture_index].Width / 2);
         }
 
         public virtual void animate()

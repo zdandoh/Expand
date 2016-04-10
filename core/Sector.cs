@@ -54,7 +54,7 @@ namespace Expand.core
         public int[] getNewObjectPos(int size_offset = 0)
         {
             int[] pos = { 0, 0 };
-            pos[0] = Program.game.rand_gen.Next(size_offset, SECTOR_SIZE - size_offset) + SECTOR_SIZE*this.coords[0];
+            pos[0] = Program.game.rand_gen.Next(size_offset, SECTOR_SIZE - size_offset) + SECTOR_SIZE * this.coords[0];
             pos[1] = Program.game.rand_gen.Next(size_offset, SECTOR_SIZE - size_offset) + SECTOR_SIZE * this.coords[1];
             return pos;
         }
