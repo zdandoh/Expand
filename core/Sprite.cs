@@ -14,14 +14,14 @@ namespace Expand.core
         private List<Color[]> meshes;
         private int texture_index = 0;
 
-        public Sprite(Texture2D first_texture, float rotation = 0f, float scale = 0f)
+        public Sprite(Texture2D first_texture)
         {
             textures = new List<Texture2D>();
             meshes = new List<Color[]>();
-            this.addTexture(first_texture, rotation, scale);
+            this.addTexture(first_texture);
         }
 
-        public void addTexture(Texture2D new_texture, float rotation = 0f, float scale = 0f)
+        public void addTexture(Texture2D new_texture)
         {
             Color[] new_mesh = new Color[new_texture.Width * new_texture.Height];
             new_texture.GetData(new_mesh);
