@@ -123,18 +123,20 @@ namespace Expand.core.space
         /// <returns>Any collision object that has fully implemented collision methods.</returns>
         public virtual bool collidesWith(SpaceObject obj)
         {
-            Matrix tranformA = getTransform(this.pos, new Vector2(this.sprite.getFrame().Height / 2, this.sprite.getFrame().Width / 2), this.scale, this.rotation);
-            Matrix tranformB = getTransform(obj.pos, new Vector2(obj.sprite.getFrame().Height / 2, obj.sprite.getFrame().Width / 2), obj.scale, obj.rotation);
             // Check if thing is solid
             if (!obj.solid || !this.solid)
             {
                 return false;
             }
 
-            if (!(Util.distance(this.pos[0], this.pos[1], obj.pos[0], obj.pos[1]) <= 100))
+            int dist = (int)Util.distance(this.pos[0], this.pos[1], obj.pos[0], obj.pos[1]);
+            if(dist > (obj.sprite.getFrame().Height + obj.sprite.getFrame().Width) / 2 + (this.sprite.getFrame().Height + this.sprite.getFrame().Width) / 2)
             {
                 return false;
             }
+
+            Matrix tranformA = getTransform(this.pos, new Vector2(this.sprite.getFrame().Height / 2, this.sprite.getFrame().Width / 2), this.scale, this.rotation);
+            Matrix tranformB = getTransform(obj.pos, new Vector2(obj.sprite.getFrame().Height / 2, obj.sprite.getFrame().Width / 2), obj.scale, obj.rotation);
 
             bool intersects = IntersectPixels(tranformA, this.sprite.getFrame().Width, this.sprite.getFrame().Height, this.sprite.getMesh(), tranformB, obj.sprite.getFrame().Width, obj.sprite.getFrame().Height, obj.sprite.getMesh());
 
