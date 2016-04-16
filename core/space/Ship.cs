@@ -32,8 +32,8 @@ namespace Expand.core.space
             pos[0] = Expand.screen_size[0] / 2;
             pos[1] = Expand.screen_size[1] / 2;
             tool = new Tool();
-            this.pos[0] -= sprite.getFrame().Width / 2;
-            this.pos[1] -= sprite.getFrame().Height / 2;
+            this.pos[0] -= sprite.frame.Width / 2;
+            this.pos[1] -= sprite.frame.Height / 2;
             this.draw_location = (int[]) this.pos.Clone();
         }
 
@@ -254,7 +254,7 @@ namespace Expand.core.space
             // Draw ship
             Vector2 pos_vector = new Vector2(draw_location[0], draw_location[1]);
             Vector2 origin = sprite.getOrigin();
-            Program.game.spriteBatch.Draw(this.sprite.getFrame(), pos_vector, null, Color.White, rotation, origin, 1, SpriteEffects.None, 0.9f);
+            Program.game.spriteBatch.Draw(this.sprite.frame, pos_vector, null, Color.White, rotation, origin, 1, SpriteEffects.None, 0.9f);
         }
     }
 

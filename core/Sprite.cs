@@ -13,6 +13,19 @@ namespace Expand.core
         private List<Texture2D> textures;
         private List<Color[]> meshes;
         private int texture_index = 0;
+        public Texture2D frame {
+            get
+            {
+                return textures[texture_index];
+            }
+        }
+        public Color[] mesh
+        {
+            get
+            {
+                return meshes[texture_index];
+            }
+        }
 
         public Sprite(Texture2D first_texture)
         {
@@ -28,16 +41,6 @@ namespace Expand.core
 
             textures.Add(new_texture);
             meshes.Add(new_mesh);
-        }
-
-        public Texture2D getFrame()
-        {
-            return textures[texture_index];
-        }
-
-        public Color[] getMesh()
-        {
-            return meshes[texture_index];
         }
 
         public Vector2 getOrigin()

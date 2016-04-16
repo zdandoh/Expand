@@ -196,7 +196,7 @@ namespace Expand.core
         /// <param name="y">Space coordinate Y.</param>
         public void drawDebugSquare(int x, int y)
         {
-            Program.game.drawSprite(sprites["gui\\icon\\debug_square.png"].getFrame(), x, y, layer: 0.99F);
+            Program.game.drawSprite(sprites["gui\\icon\\debug_square.png"].frame, x, y, layer: 0.99F);
         }
 
         /// <summary>

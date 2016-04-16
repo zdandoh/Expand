@@ -36,7 +36,7 @@ namespace Expand.core.space
         /// </summary>
         public override void draw()
         {
-            Program.game.drawSprite(this.sprite.getFrame(), pos[0], pos[1], layer: 0f);
+            Program.game.drawSprite(this.sprite.frame, pos[0], pos[1], layer: 0f);
         }
 
         public override void setSprite()

@@ -25,9 +25,9 @@ namespace Expand.core.gui
         /// </summary>
         public Toolbar()
         {
-            hotbar = Program.game.sprites["gui\\hotbar.png"].getFrame();
-            hotbar_selector = Program.game.sprites["gui\\hotbar_selector.png"].getFrame();
-            tool1_icon = Program.game.sprites["gui\\icon\\mining_laser.png"].getFrame();
+            hotbar = Program.game.sprites["gui\\hotbar.png"].frame;
+            hotbar_selector = Program.game.sprites["gui\\hotbar_selector.png"].frame;
+            tool1_icon = Program.game.sprites["gui\\icon\\mining_laser.png"].frame;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Expand.core.gui
                 Program.game.spriteBatch.Draw(hotbar, pos_vector, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0.99f);
                 Program.game.spriteBatch.Draw(hotbar_selector, selector_pos, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
                 Program.game.spriteBatch.Draw(tool1_icon, new Vector2(pos_vector.X + 4, pos_vector.Y + 4), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
-                Program.game.spriteBatch.Draw(Program.game.sprites["gui\\icon\\builder.png"].getFrame(), new Vector2(pos_vector.X + 60, pos_vector.Y + 6), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
+                Program.game.spriteBatch.Draw(Program.game.sprites["gui\\icon\\builder.png"].frame, new Vector2(pos_vector.X + 60, pos_vector.Y + 6), null, Color.White, 0f, origin, 1f, SpriteEffects.None, 1f);
             }
 
             int[] text_pos = { 10, 5 };

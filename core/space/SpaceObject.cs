@@ -130,15 +130,15 @@ namespace Expand.core.space
             }
 
             int dist = (int)Util.distance(this.pos[0], this.pos[1], obj.pos[0], obj.pos[1]);
-            if(dist > (obj.sprite.getFrame().Height + obj.sprite.getFrame().Width) / 2 + (this.sprite.getFrame().Height + this.sprite.getFrame().Width) / 2)
+            if(dist > (obj.sprite.frame.Height + obj.sprite.frame.Width) / 2 + (this.sprite.frame.Height + this.sprite.frame.Width) / 2)
             {
                 return false;
             }
 
-            Matrix tranformA = getTransform(this.pos, new Vector2(this.sprite.getFrame().Height / 2, this.sprite.getFrame().Width / 2), this.scale, this.rotation);
-            Matrix tranformB = getTransform(obj.pos, new Vector2(obj.sprite.getFrame().Height / 2, obj.sprite.getFrame().Width / 2), obj.scale, obj.rotation);
+            Matrix tranformA = getTransform(this.pos, new Vector2(this.sprite.frame.Height / 2, this.sprite.frame.Width / 2), this.scale, this.rotation);
+            Matrix tranformB = getTransform(obj.pos, new Vector2(obj.sprite.frame.Height / 2, obj.sprite.frame.Width / 2), obj.scale, obj.rotation);
 
-            bool intersects = IntersectPixels(tranformA, this.sprite.getFrame().Width, this.sprite.getFrame().Height, this.sprite.getMesh(), tranformB, obj.sprite.getFrame().Width, obj.sprite.getFrame().Height, obj.sprite.getMesh());
+            bool intersects = IntersectPixels(tranformA, this.sprite.frame.Width, this.sprite.frame.Height, this.sprite.mesh, tranformB, obj.sprite.frame.Width, obj.sprite.frame.Height, obj.sprite.mesh);
 
             return intersects;
         }

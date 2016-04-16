@@ -47,7 +47,7 @@ namespace Expand.core.space
             int green_level = (int)((float)this.minerals / (float)(this.diameter * 5) * 80);
             Color asteroid_color = new Color(0, green_level + 47, 14);
             Vector2 origin = sprite.getOrigin();
-            Program.game.drawSprite(this.sprite.getFrame(), pos[0], pos[1], scale: scale, origin: origin, color: asteroid_color, layer: 0.1f);
+            Program.game.drawSprite(this.sprite.frame, pos[0], pos[1], scale: scale, origin: origin, color: asteroid_color, layer: 0.1f);
         }
 
         /// <summary>
