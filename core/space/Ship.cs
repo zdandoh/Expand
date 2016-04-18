@@ -92,7 +92,6 @@ namespace Expand.core.space
             int x2 = Mouse.GetState().Position.X;
             int y2 = Mouse.GetState().Position.Y;
             double line_distance = Util.distance(x1, y1, x2, y2);
-            //double distance_from_ship = Util.distance(x1, y1, a, b);
 
             double direction_x = (x2 - x1) / line_distance;
             double direction_y = (y2 - y1) / line_distance;
