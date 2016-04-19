@@ -25,7 +25,7 @@ namespace Expand.core.space
             this.pos[0] = x;
             this.pos[1] = y;
             this.diameter = Program.game.rand_gen.Next(MIN_SIZE, MAX_SIZE);
-            this.minerals = this.diameter * 5;
+            this.minerals = (float)(Math.Pow((diameter / 8 / 2), 3) * Math.PI * 4 / 3);
             this.scale = (float)diameter / sprite.frame.Width;
             this.addToSector(sector_inside);
         }
