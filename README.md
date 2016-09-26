@@ -9,3 +9,5 @@ A highly militaristic race may attack one of your primary food producting planet
 
 Build a small outpost with bots that automatically harvest ore.
 All this and more in the automagical exploration game "Expand".
+
+Website: https://zdandoh.com/expand.html
